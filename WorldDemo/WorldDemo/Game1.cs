@@ -21,6 +21,18 @@ namespace WorldDemo
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Matrix worldMatrix;
+        Matrix viewMatrix;
+        Matrix projectionMatrix;
+
+        Vector3 cameraPos = new Vector3(40, 5, 20);
+
+        Effect effect;
+        Model model;
+
+        VertexPositionNormalTexture[] floorVertices;
+        VertexDeclaration vpntDeclaration;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -36,8 +48,21 @@ namespace WorldDemo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            InitializeFloor();
             base.Initialize();
+        }
+
+        private void InitializeFloor()
+        {
+            floorVertices = new VertexPositionNormalTexture[6];
+
+            floorVertices[0] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.Zero);
+            floorVertices[1] = new VertexPositionNormalTexture(new Vector3(-1000, 0, 1000), Vector3.Up, Vector2.Zero);
+            floorVertices[2] = new VertexPositionNormalTexture(new Vector3(-1000, 0, -1000), Vector3.Up, Vector2.Zero);
+
+            floorVertices[3] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.Zero);
+            floorVertices[4] = new VertexPositionNormalTexture(new Vector3(-1000, 0, -1000), Vector3.Up, Vector2.Zero);
+            floorVertices[5] = new VertexPositionNormalTexture(new Vector3(1000, 0, -1000), Vector3.Up, Vector2.Zero);
         }
 
         /// <summary>
@@ -50,6 +75,64 @@ namespace WorldDemo
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
+            vpntDeclaration = new VertexDeclaration(GraphicsDevice, VertexPositionNormalTexture.VertexElements);
+            GraphicsDevice.VertexDeclaration = vpntDeclaration;
+
+            InitializeTransform();
+            InitializeEffect();
+
+            LoadModel();
+        }
+
+        /// <summary>
+        /// Initializes the transforms used for the 3D model.
+        /// </summary>
+        private void InitializeTransform()
+        {
+            worldMatrix = Matrix.CreateRotationX(0);
+
+            viewMatrix = Matrix.CreateLookAt(cameraPos, Vector3.Zero, Vector3.Up);
+
+            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
+                MathHelper.ToRadians(45),
+                GraphicsDevice.Viewport.AspectRatio,
+                1.0f, 1000.0f);
+        }
+
+		/// <summary>
+		/// Initializes the basic effect (parameter setting and technique selection)
+		/// used for the 3D model.
+		/// </summary>
+        private void InitializeEffect()
+        {
+            effect = Content.Load<Effect>("Basic");
+
+            effect.Parameters["World"].SetValue(worldMatrix);
+            effect.Parameters["View"].SetValue(viewMatrix);
+            effect.Parameters["Projection"].SetValue(projectionMatrix);
+
+            effect.Parameters["lightPos"].SetValue(new Vector4(20f, 20f, 20f, 1f));
+            effect.Parameters["lightColor"].SetValue(Vector4.One);
+            effect.Parameters["cameraPos"].SetValue(new Vector4(cameraPos, 1f));
+
+            effect.Parameters["ambientColor"].SetValue(new Vector4(.2f, .2f, .2f, 1f));
+            effect.Parameters["diffusePower"].SetValue(1f);
+            effect.Parameters["specularPower"].SetValue(1);
+            effect.Parameters["exponent"].SetValue(8);
+        }
+
+        private void LoadModel()
+        {
+            model = Content.Load<Model>("sphere");
+
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                {
+                    part.Effect = effect;
+                }
+            }
         }
 
         /// <summary>
@@ -86,8 +169,34 @@ namespace WorldDemo
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            
+            DrawFloor();
+            DrawModel();
+            
             base.Draw(gameTime);
+        }
+
+        private void DrawFloor()
+        {
+            effect.Parameters["materialColor"].SetValue(Color.Green.ToVector4());
+            effect.Begin();
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Begin();
+                GraphicsDevice.DrawUserPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, floorVertices, 0, 2);
+                pass.End();
+            }
+            effect.End();
+        }
+
+        private void DrawModel()
+        {
+            //effect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
+            effect.Parameters["materialColor"].SetValue(new Vector4(.0f, .5f, .8f, 1f));
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                mesh.Draw();
+            }
         }
     }
 }
