@@ -21,14 +21,14 @@ namespace WorldDemo
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Matrix worldMatrix;
         Matrix viewMatrix;
         Matrix projectionMatrix;
 
-        Vector3 cameraPos = new Vector3(40, 5, 20);
+        Vector3 cameraPosition = new Vector3(40, 5, 20);
+        Vector3 cameraTarget = Vector3.Zero;
 
         Effect effect;
-        Model model;
+        Avatar model;
 
         VertexPositionNormalTexture[] floorVertices;
         VertexDeclaration vpntDeclaration;
@@ -48,7 +48,11 @@ namespace WorldDemo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            model = new Avatar(this, "sphere", effect);
+            Components.Add(model);
+            
             InitializeFloor();
+            
             base.Initialize();
         }
 
@@ -79,10 +83,10 @@ namespace WorldDemo
             vpntDeclaration = new VertexDeclaration(GraphicsDevice, VertexPositionNormalTexture.VertexElements);
             GraphicsDevice.VertexDeclaration = vpntDeclaration;
 
-            InitializeTransform();
             InitializeEffect();
-
-            LoadModel();
+            model.ModelEffect = effect;
+            updateCamera();
+            InitializeTransform();
         }
 
         /// <summary>
@@ -90,14 +94,22 @@ namespace WorldDemo
         /// </summary>
         private void InitializeTransform()
         {
-            worldMatrix = Matrix.CreateRotationX(0);
-
-            viewMatrix = Matrix.CreateLookAt(cameraPos, Vector3.Zero, Vector3.Up);
+            updateCamera();
 
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45),
                 GraphicsDevice.Viewport.AspectRatio,
                 1.0f, 1000.0f);
+
+            effect.Parameters["Projection"].SetValue(projectionMatrix);
+            effect.Parameters["World"].SetValue(Matrix.Identity);
+        }
+
+        private void updateCamera()
+        {
+            viewMatrix = Matrix.CreateLookAt(cameraPosition, cameraTarget, Vector3.Up);
+
+            effect.Parameters["View"].SetValue(viewMatrix);
         }
 
 		/// <summary>
@@ -108,31 +120,14 @@ namespace WorldDemo
         {
             effect = Content.Load<Effect>("Basic");
 
-            effect.Parameters["World"].SetValue(worldMatrix);
-            effect.Parameters["View"].SetValue(viewMatrix);
-            effect.Parameters["Projection"].SetValue(projectionMatrix);
-
             effect.Parameters["lightPos"].SetValue(new Vector4(20f, 20f, 20f, 1f));
             effect.Parameters["lightColor"].SetValue(Vector4.One);
-            effect.Parameters["cameraPos"].SetValue(new Vector4(cameraPos, 1f));
+            effect.Parameters["cameraPos"].SetValue(new Vector4(cameraPosition, 1f));
 
             effect.Parameters["ambientColor"].SetValue(new Vector4(.2f, .2f, .2f, 1f));
             effect.Parameters["diffusePower"].SetValue(1f);
             effect.Parameters["specularPower"].SetValue(1);
             effect.Parameters["exponent"].SetValue(8);
-        }
-
-        private void LoadModel()
-        {
-            model = Content.Load<Model>("sphere");
-
-            foreach (ModelMesh mesh in model.Meshes)
-            {
-                foreach (ModelMeshPart part in mesh.MeshParts)
-                {
-                    part.Effect = effect;
-                }
-            }
         }
 
         /// <summary>
@@ -151,11 +146,40 @@ namespace WorldDemo
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            KeyboardState keyboard = Keyboard.GetState();
 
-            // TODO: Add your update logic here
+            if (keyboard.IsKeyDown(Keys.Escape))
+            {
+                this.Exit();
+            }
+
+            if (keyboard.IsKeyDown(Keys.Space))
+            {
+                model.Position = Vector3.Zero;
+            }
+
+            if (keyboard.IsKeyDown(Keys.W))
+            {
+                model.MoveForward();
+            }
+
+            if (keyboard.IsKeyDown(Keys.A))
+            {
+                model.StrafeLeft();
+            }
+
+            if (keyboard.IsKeyDown(Keys.S))
+            {
+                model.MoveBackward();
+            }
+
+            if (keyboard.IsKeyDown(Keys.D))
+            {
+                model.StrafeRight();
+            }
+
+            cameraTarget = model.Position;
+            updateCamera();
 
             base.Update(gameTime);
         }
@@ -171,7 +195,6 @@ namespace WorldDemo
             // TODO: Add your drawing code here
             
             DrawFloor();
-            DrawModel();
             
             base.Draw(gameTime);
         }
@@ -189,14 +212,5 @@ namespace WorldDemo
             effect.End();
         }
 
-        private void DrawModel()
-        {
-            //effect.Parameters["World"].SetValue(Matrix.CreateTranslation(Vector3.Zero));
-            effect.Parameters["materialColor"].SetValue(new Vector4(.0f, .5f, .8f, 1f));
-            foreach (ModelMesh mesh in model.Meshes)
-            {
-                mesh.Draw();
-            }
-        }
     }
 }
