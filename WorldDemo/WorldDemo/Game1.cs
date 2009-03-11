@@ -24,9 +24,14 @@ namespace WorldDemo
         Matrix projectionMatrix;
 
         Camera camera;
+        Vector3 cameraOffset = new Vector3(0, 1, 10);
 
         Effect effect;
-        Avatar model;
+        Avatar avatar;
+        ModelComponent sphere1;
+        ModelComponent sphere2;
+        ModelComponent sphere3;
+        ModelComponent sphere4;
 
         VertexPositionNormalTexture[] floorVertices;
         VertexDeclaration vpntDeclaration;
@@ -46,13 +51,33 @@ namespace WorldDemo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            model = new Avatar(this, "sphere", effect);
-            model.DrawOrder = 1;
-            Components.Add(model);
+            avatar = new Avatar(this, "sphere");
+            avatar.DrawOrder = 1;
+            Components.Add(avatar);
+
+            sphere1 = new ModelComponent(this, "sphere");
+            sphere1.DrawOrder = 1;
+            sphere1.Position = new Vector3(10, 0, 10);
+            Components.Add(sphere1);
+
+            sphere2 = new ModelComponent(this, "sphere");
+            sphere2.DrawOrder = 1;
+            sphere2.Position = new Vector3(-10, 0, 10);
+            Components.Add(sphere2);
+
+            sphere3 = new ModelComponent(this, "sphere");
+            sphere3.DrawOrder = 1;
+            sphere3.Position = new Vector3(10, 0, -10);
+            Components.Add(sphere3);
+
+            sphere4 = new ModelComponent(this, "sphere");
+            sphere4.DrawOrder = 1;
+            sphere4.Position = new Vector3(-10, 0, -10);
+            Components.Add(sphere4);
 
             camera = new Camera(this);
-            camera.Position = new Vector3(40, 5, 20);
-            model.DrawOrder = 0;
+            camera.Position = cameraOffset;
+            camera.DrawOrder = 0;
             Components.Add(camera);
 
             InitializeFloor();
@@ -88,7 +113,11 @@ namespace WorldDemo
             GraphicsDevice.VertexDeclaration = vpntDeclaration;
 
             InitializeEffect();
-            model.ModelEffect = effect;
+            avatar.ModelEffect = effect;
+            sphere1.ModelEffect = effect;
+            sphere2.ModelEffect = effect;
+            sphere3.ModelEffect = effect;
+            sphere4.ModelEffect = effect;
             camera.Effect = effect;
             InitializeTransform();
         }
@@ -149,30 +178,31 @@ namespace WorldDemo
 
             if (keyboard.IsKeyDown(Keys.Space))
             {
-                model.Position = Vector3.Zero;
+                avatar.Position = Vector3.Zero;
             }
 
             if (keyboard.IsKeyDown(Keys.W))
             {
-                model.MoveForward();
+                avatar.MoveForward();
             }
 
             if (keyboard.IsKeyDown(Keys.A))
             {
-                model.StrafeLeft();
+                avatar.StrafeLeft();
             }
 
             if (keyboard.IsKeyDown(Keys.S))
             {
-                model.MoveBackward();
+                avatar.MoveBackward();
             }
 
             if (keyboard.IsKeyDown(Keys.D))
             {
-                model.StrafeRight();
+                avatar.StrafeRight();
             }
 
-            camera.Target = model.Position;
+            camera.Target = avatar.Position;
+            camera.Position = avatar.Position + cameraOffset;
 
             base.Update(gameTime);
         }
@@ -187,9 +217,10 @@ namespace WorldDemo
 
             // TODO: Add your drawing code here
             
-            DrawFloor();
             
             base.Draw(gameTime);
+
+            DrawFloor();
         }
 
         private void DrawFloor()

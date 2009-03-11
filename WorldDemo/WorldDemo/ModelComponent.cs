@@ -47,7 +47,7 @@ namespace WorldDemo
             set { position = value; }
         }
 
-        public ModelComponent(Game game, String modelName, Effect effect)
+        public ModelComponent(Game game, String modelName)
             : base(game)
         {
             this.modelName = modelName;
