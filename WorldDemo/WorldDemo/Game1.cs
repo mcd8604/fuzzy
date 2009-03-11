@@ -188,7 +188,7 @@ namespace WorldDemo
 
             if (keyboard.IsKeyDown(Keys.A))
             {
-                avatar.StrafeLeft();
+                avatar.TurnLeft();
             }
 
             if (keyboard.IsKeyDown(Keys.S))
@@ -198,11 +198,11 @@ namespace WorldDemo
 
             if (keyboard.IsKeyDown(Keys.D))
             {
-                avatar.StrafeRight();
+                avatar.TurnRight();
             }
 
             camera.Target = avatar.Position;
-            camera.Position = avatar.Position + cameraOffset;
+            camera.Position = avatar.Position + Vector3.Transform(cameraOffset, avatar.Rotation);
 
             base.Update(gameTime);
         }
