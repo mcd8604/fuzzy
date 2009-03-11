@@ -21,11 +21,9 @@ namespace WorldDemo
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Matrix viewMatrix;
         Matrix projectionMatrix;
 
-        Vector3 cameraPosition = new Vector3(40, 5, 20);
-        Vector3 cameraTarget = Vector3.Zero;
+        Camera camera;
 
         Effect effect;
         Avatar model;
@@ -49,8 +47,14 @@ namespace WorldDemo
         {
             // TODO: Add your initialization logic here
             model = new Avatar(this, "sphere", effect);
+            model.DrawOrder = 1;
             Components.Add(model);
-            
+
+            camera = new Camera(this);
+            camera.Position = new Vector3(40, 5, 20);
+            model.DrawOrder = 0;
+            Components.Add(camera);
+
             InitializeFloor();
             
             base.Initialize();
@@ -85,7 +89,7 @@ namespace WorldDemo
 
             InitializeEffect();
             model.ModelEffect = effect;
-            updateCamera();
+            camera.Effect = effect;
             InitializeTransform();
         }
 
@@ -94,8 +98,6 @@ namespace WorldDemo
         /// </summary>
         private void InitializeTransform()
         {
-            updateCamera();
-
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45),
                 GraphicsDevice.Viewport.AspectRatio,
@@ -103,13 +105,6 @@ namespace WorldDemo
 
             effect.Parameters["Projection"].SetValue(projectionMatrix);
             effect.Parameters["World"].SetValue(Matrix.Identity);
-        }
-
-        private void updateCamera()
-        {
-            viewMatrix = Matrix.CreateLookAt(cameraPosition, cameraTarget, Vector3.Up);
-
-            effect.Parameters["View"].SetValue(viewMatrix);
         }
 
 		/// <summary>
@@ -122,7 +117,6 @@ namespace WorldDemo
 
             effect.Parameters["lightPos"].SetValue(new Vector4(20f, 20f, 20f, 1f));
             effect.Parameters["lightColor"].SetValue(Vector4.One);
-            effect.Parameters["cameraPos"].SetValue(new Vector4(cameraPosition, 1f));
 
             effect.Parameters["ambientColor"].SetValue(new Vector4(.2f, .2f, .2f, 1f));
             effect.Parameters["diffusePower"].SetValue(1f);
@@ -178,8 +172,7 @@ namespace WorldDemo
                 model.StrafeRight();
             }
 
-            cameraTarget = model.Position;
-            updateCamera();
+            camera.Target = model.Position;
 
             base.Update(gameTime);
         }
