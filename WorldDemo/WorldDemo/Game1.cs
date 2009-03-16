@@ -223,7 +223,7 @@ namespace WorldDemo
 
             if (keyboard.IsKeyDown(Keys.Space))
             {
-                avatar.Jump();
+               // avatar.Jump();
             }
 
             camera.Target = avatar.Position;

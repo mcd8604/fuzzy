@@ -18,12 +18,15 @@ struct VertexShaderInput
     float4 Position : POSITION0;
     float4 Normal	: NORMAL0;
     float4 Color    : COLOR0;
+    float2 Texcoord : TEXCOORD0;
 };
 
 struct VertexShaderOutput
 {
     float4 Position : POSITION0;
     float4 Color	: COLOR0;
+    float2 Texcoord  : TEXCOORD0;
+
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -46,6 +49,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     //output.Color = ambient + diffuse + specular;
 	output.Color = ambient + diffuse;
 	
+	output.Texcoord = input.Texcoord;
     return output;
 }
 
