@@ -201,8 +201,35 @@ namespace WorldDemo
                 avatar.TurnRight();
             }
 
+            if (keyboard.IsKeyDown(Keys.Up))
+            {
+                avatar.MoveForward();
+            }
+
+            if (keyboard.IsKeyDown(Keys.Down))
+            {
+                avatar.MoveBackward();
+            }
+
+            if (keyboard.IsKeyDown(Keys.Right))
+            {
+                avatar.TurnRight();
+            }
+
+            if (keyboard.IsKeyDown(Keys.Left))
+            {
+                avatar.TurnLeft();
+            }
+
+            if (keyboard.IsKeyDown(Keys.Space))
+            {
+                avatar.Jump();
+            }
+
             camera.Target = avatar.Position;
             camera.Position = avatar.Position + Vector3.Transform(cameraOffset, avatar.Rotation);
+
+            //avatar.Position = avatar.Position + Vector3.Transform(cameraOffset, avatar.Rotation);
 
             base.Update(gameTime);
         }
