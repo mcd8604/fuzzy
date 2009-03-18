@@ -11,7 +11,9 @@ namespace WorldDemo
     {
 
         private string modelName;
+        private string textureName;
         protected Model model;
+        protected Texture2D texture;
 
         protected Effect effect;
         public Effect ModelEffect
@@ -53,16 +55,27 @@ namespace WorldDemo
             this.modelName = modelName;
         }
 
+        public ModelComponent(Game game, String modelName, String textureName)
+            : base(game)
+        {
+            this.modelName = modelName;
+            this.textureName = textureName;
+        }
+
         protected override void LoadContent()
         {
             model = Game.Content.Load<Model>(modelName);
+
+            if(!string.IsNullOrEmpty(textureName))
+                texture = Game.Content.Load<Texture2D>(textureName);
+            
             base.LoadContent();
         }
 
         public override void Draw(GameTime gameTime)
         {
             effect.Parameters["World"].SetValue(getTransform());
-            effect.Parameters["materialColor"].SetValue(this.color);
+            effect.Parameters["BasicTexture"].SetValue(texture);
 
             foreach (ModelMesh mesh in model.Meshes)
             {

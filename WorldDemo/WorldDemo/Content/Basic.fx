@@ -2,16 +2,27 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-float4 lightPos;
+float3 lightPos;
 float4 lightColor;
-float4 cameraPos;
+float4 EyePosition;
 
-float4 materialColor;
-float4 ambientColor;
+float4 AmbientLightColor;
 
-float diffusePower;
-float specularPower;
+float DiffusePower;
+float SpecularPower;
 float exponent;
+
+Texture BasicTexture;
+
+sampler TextureSampler = sampler_state 
+{ 
+	texture = <BasicTexture>; 
+	magfilter = LINEAR; 
+	minfilter = LINEAR; 
+	mipfilter = LINEAR; 
+	AddressU = WRAP; 
+	AddressV = WRAP;
+};
 
 struct VertexShaderInput
 {
@@ -23,39 +34,52 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-    float4 Position : POSITION0;
-    float4 Color	: COLOR0;
-    float2 Texcoord  : TEXCOORD0;
-
+    float4 Position : POSITION;
+    float2 Texcoord : TEXCOORD0;
+    float3 Normal	: TEXCOORD1;
+    float3 Light	: TEXCOORD2;
+    float3 Reflected: TEXCOORD3;
+    float3 View		: TEXCOORD4;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
     VertexShaderOutput output;
-
-    float4 worldPosition = mul(input.Position, World);
-    float4 viewPosition = mul(worldPosition, View);
-    output.Position = mul(viewPosition, Projection); 
+    	
+    float4x4 wvp = mul(mul(World,View),Projection);
+    output.Position = mul(input.Position, wvp);
     
-    float4 lightVector = normalize(lightPos - input.Position);
-    //float4 reflectedVector = normalize(reflect(lightVector, input.Normal));
-    //float4 viewVector = normalize(cameraPos - input.Position);
+    output.Texcoord = input.Texcoord;
     
-    float4 ambient = ambientColor * materialColor;
-    float4 surfaceColor = lightColor * materialColor;
-    float4 diffuse = diffusePower * surfaceColor * saturate(dot(lightVector, input.Normal)); 
-    //float4 specular = specularPower * surfaceColor * pow(dot(viewVector, reflectedVector), exponent);
-
-    //output.Color = ambient + diffuse + specular;
-	output.Color = ambient + diffuse;
-	
-	output.Texcoord = input.Texcoord;
+    float3 WPosition = mul(input.Position, World).xyz;
+    
+	output.Normal = mul(input.Normal, World);
+    
+    output.Light = normalize(lightPos - WPosition);
+    output.Reflected = normalize(reflect(output.Light, output.Normal));
+    output.View = normalize(EyePosition - WPosition);
+        
     return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
-{
-    return input.Color;
+{    
+
+    float4 textureColor = tex2D(TextureSampler, input.Texcoord);
+    float4 ambient = AmbientLightColor * textureColor;
+    float4 surfaceColor = lightColor * textureColor;
+    float4 diffuse = DiffusePower * surfaceColor * dot(input.Light, input.Normal); 
+    
+    float4 specular;
+    float dot = dot(input.View, input.Reflected);
+    
+    if(dot < 0) {
+		specular = 0;
+	} else {   
+		specular = SpecularPower * lightColor * pow(dot, exponent);
+	}
+	
+    return ambient + diffuse + specular;
 }
 
 technique Technique1
@@ -64,7 +88,7 @@ technique Technique1
     {
         // TODO: set renderstates here.
 
-        VertexShader = compile vs_1_1 VertexShaderFunction();
-        PixelShader = compile ps_1_1 PixelShaderFunction();
+        VertexShader = compile vs_2_0 VertexShaderFunction();
+        PixelShader = compile ps_2_0 PixelShaderFunction();
     }
 }

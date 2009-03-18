@@ -26,12 +26,13 @@ namespace WorldDemo
         Camera camera;
         Vector3 cameraOffset = new Vector3(0, 1, 10);
 
-        Effect effect;
+        BasicEffect effect;
         Avatar avatar;
         ModelComponent sphere1;
         ModelComponent sphere2;
         ModelComponent sphere3;
         ModelComponent sphere4;
+        Texture2D texture;
 
         VertexPositionNormalTexture[] floorVertices;
         VertexDeclaration vpntDeclaration;
@@ -89,13 +90,13 @@ namespace WorldDemo
         {
             floorVertices = new VertexPositionNormalTexture[6];
 
-            floorVertices[0] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.Zero);
-            floorVertices[1] = new VertexPositionNormalTexture(new Vector3(-1000, 0, 1000), Vector3.Up, Vector2.Zero);
+            floorVertices[0] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.One);
+            floorVertices[1] = new VertexPositionNormalTexture(new Vector3(-1000, 0, 1000), Vector3.Up, new Vector2(0f, 1f));
             floorVertices[2] = new VertexPositionNormalTexture(new Vector3(-1000, 0, -1000), Vector3.Up, Vector2.Zero);
 
-            floorVertices[3] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.Zero);
+            floorVertices[3] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.One);
             floorVertices[4] = new VertexPositionNormalTexture(new Vector3(-1000, 0, -1000), Vector3.Up, Vector2.Zero);
-            floorVertices[5] = new VertexPositionNormalTexture(new Vector3(1000, 0, -1000), Vector3.Up, Vector2.Zero);
+            floorVertices[5] = new VertexPositionNormalTexture(new Vector3(1000, 0, -1000), Vector3.Up, new Vector2(1f, 0f));
         }
 
         /// <summary>
@@ -112,7 +113,10 @@ namespace WorldDemo
             vpntDeclaration = new VertexDeclaration(GraphicsDevice, VertexPositionNormalTexture.VertexElements);
             GraphicsDevice.VertexDeclaration = vpntDeclaration;
 
+            texture = Content.Load<Texture2D>("Checker");
+
             InitializeEffect();
+
             avatar.ModelEffect = effect;
             sphere1.ModelEffect = effect;
             sphere2.ModelEffect = effect;
@@ -142,15 +146,27 @@ namespace WorldDemo
 		/// </summary>
         private void InitializeEffect()
         {
-            effect = Content.Load<Effect>("Basic");
+            //effect = Content.Load<Effect>("Basic");
 
-            effect.Parameters["lightPos"].SetValue(new Vector4(20f, 20f, 20f, 1f));
-            effect.Parameters["lightColor"].SetValue(Vector4.One);
+            //effect.Parameters["lightPos"].SetValue(new Vector4(20f, 20f, 20f, 1f));
+            //effect.Parameters["lightColor"].SetValue(Vector4.One);
 
-            effect.Parameters["ambientColor"].SetValue(new Vector4(.2f, .2f, .2f, 1f));
-            effect.Parameters["diffusePower"].SetValue(1f);
-            effect.Parameters["specularPower"].SetValue(1);
-            effect.Parameters["exponent"].SetValue(8);
+            //effect.Parameters["AmbientLightColor"].SetValue(new Vector4(.2f, .2f, .2f, 1f));
+            //effect.Parameters["DiffusePower"].SetValue(1f);
+            //effect.Parameters["SpecularPower"].SetValue(1);
+            //effect.Parameters["exponent"].SetValue(8);
+
+            effect = new BasicEffect(GraphicsDevice, new EffectPool());
+
+            effect.LightingEnabled = true;
+            effect.TextureEnabled = true;
+
+            effect.AmbientLightColor = new Vector3(.2f, .2f, .2f);
+
+            effect.DirectionalLight0.Enabled = true;
+            effect.DirectionalLight0.Direction = Vector3.Normalize(Vector3.One * -1);
+            effect.DirectionalLight0.SpecularColor = Vector3.One;
+            effect.DirectionalLight0.DiffuseColor = Vector3.One;
         }
 
         /// <summary>
@@ -252,7 +268,7 @@ namespace WorldDemo
 
         private void DrawFloor()
         {
-            effect.Parameters["materialColor"].SetValue(Color.Green.ToVector4());
+            effect.Parameters["BasicTexture"].SetValue(texture);
             effect.Begin();
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {

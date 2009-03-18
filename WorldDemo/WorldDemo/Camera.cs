@@ -18,8 +18,9 @@ namespace WorldDemo
             {
                 position = value;
                 viewMatrix = Matrix.CreateLookAt(position, target, Vector3.Up);
-                if(effect != null)
-                    effect.Parameters["cameraPos"].SetValue(new Vector4(position, 1f));
+
+                if (effect != null)
+                    effect.Parameters["EyePosition"].SetValue(position);
             }
         }
 
