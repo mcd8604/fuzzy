@@ -43,10 +43,16 @@ namespace WorldDemo
         }
 
         protected Vector3 position = Vector3.Zero;
-        public Vector3 Position
+        public virtual Vector3 Position
         {
             get { return position; }
             set { position = value; }
+        }
+
+        protected BoundingSphere bounds;
+        public BoundingSphere Bounds
+        {
+            get { return bounds; }
         }
 
         public ModelComponent(Game game, String modelName)
@@ -65,11 +71,34 @@ namespace WorldDemo
         protected override void LoadContent()
         {
             model = Game.Content.Load<Model>(modelName);
+            
+            GenerateBoundingSphere();
 
             if(!string.IsNullOrEmpty(textureName))
                 texture = Game.Content.Load<Texture2D>(textureName);
             
             base.LoadContent();
+        }
+
+        private void GenerateBoundingSphere()
+        {
+            List<Vector3> vertices = new List<Vector3>();
+
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                int numVertices = 0;
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                {
+                    numVertices += part.NumVertices;
+                }
+
+                Vector3[] vertexArray = new Vector3[numVertices];
+                mesh.VertexBuffer.GetData<Vector3>(vertexArray);
+
+                vertices.AddRange(vertexArray);
+            }
+
+            bounds = BoundingSphere.CreateFromPoints(vertices);
         }
 
         public override void Draw(GameTime gameTime)

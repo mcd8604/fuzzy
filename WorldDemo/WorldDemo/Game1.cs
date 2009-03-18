@@ -37,6 +37,10 @@ namespace WorldDemo
         VertexPositionNormalTexture[] floorVertices;
         VertexDeclaration vpntDeclaration;
 
+        Physics physics;
+
+        PhysicsBody testBody;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -52,28 +56,36 @@ namespace WorldDemo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            avatar = new Avatar(this, "sphere");
+            physics = new Physics(this);
+            Components.Add(physics);
+
+            testBody = new PhysicsBody();
+
+            physics.AddBody(testBody);
+            
+            avatar = new Avatar(this, "sphere", testBody);
             avatar.DrawOrder = 1;
+            avatar.Position = new Vector3(0, 10, 0);
             Components.Add(avatar);
 
-            sphere1 = new ModelComponent(this, "sphere");
+            sphere1 = new ModelComponent(this, "sphere", "Checker");
             sphere1.DrawOrder = 1;
-            sphere1.Position = new Vector3(10, 0, 10);
+            sphere1.Position = new Vector3(10, 10, 10);
             Components.Add(sphere1);
 
-            sphere2 = new ModelComponent(this, "sphere");
+            sphere2 = new ModelComponent(this, "sphere", "Checker");
             sphere2.DrawOrder = 1;
-            sphere2.Position = new Vector3(-10, 0, 10);
+            sphere2.Position = new Vector3(-10, 10, 10);
             Components.Add(sphere2);
 
-            sphere3 = new ModelComponent(this, "sphere");
+            sphere3 = new ModelComponent(this, "sphere", "Checker");
             sphere3.DrawOrder = 1;
-            sphere3.Position = new Vector3(10, 0, -10);
+            sphere3.Position = new Vector3(10, 10, -10);
             Components.Add(sphere3);
 
-            sphere4 = new ModelComponent(this, "sphere");
+            sphere4 = new ModelComponent(this, "sphere", "Checker");
             sphere4.DrawOrder = 1;
-            sphere4.Position = new Vector3(-10, 0, -10);
+            sphere4.Position = new Vector3(-10, 10, -10);
             Components.Add(sphere4);
 
             camera = new Camera(this);
@@ -97,6 +109,9 @@ namespace WorldDemo
             floorVertices[3] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.One);
             floorVertices[4] = new VertexPositionNormalTexture(new Vector3(-1000, 0, -1000), Vector3.Up, Vector2.Zero);
             floorVertices[5] = new VertexPositionNormalTexture(new Vector3(1000, 0, -1000), Vector3.Up, new Vector2(1f, 0f));
+
+            physics.AddCollidable(new Plane(floorVertices[0].Position, floorVertices[1].Position, floorVertices[2].Position));
+            physics.AddCollidable(new Plane(floorVertices[3].Position, floorVertices[4].Position, floorVertices[5].Position));
         }
 
         /// <summary>
@@ -192,11 +207,6 @@ namespace WorldDemo
                 this.Exit();
             }
 
-            if (keyboard.IsKeyDown(Keys.Space))
-            {
-                avatar.Position = Vector3.Zero;
-            }
-
             if (keyboard.IsKeyDown(Keys.W))
             {
                 avatar.MoveForward();
@@ -239,13 +249,11 @@ namespace WorldDemo
 
             if (keyboard.IsKeyDown(Keys.Space))
             {
-               // avatar.Jump();
+                avatar.Jump();
             }
 
             camera.Target = avatar.Position;
             camera.Position = avatar.Position + Vector3.Transform(cameraOffset, avatar.Rotation);
-
-            //avatar.Position = avatar.Position + Vector3.Transform(cameraOffset, avatar.Rotation);
 
             base.Update(gameTime);
         }
@@ -258,8 +266,7 @@ namespace WorldDemo
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-            
+            // TODO: Add your drawing code here      
             
             base.Draw(gameTime);
 
