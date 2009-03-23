@@ -30,7 +30,34 @@ namespace WorldDemo
 
         public bool Intersects(BoundingSphere sphere)
         {
-            throw new NotImplementedException();
+            // First, check for planar intersection
+            if (sphere.Intersects(p) == PlaneIntersectionType.Intersecting)
+            {
+                // Next, check barycentric coords
+
+                // D = -(A*x0+B*y0+C*z0)
+                float distance = -(p.Normal.X * sphere.Center.X + p.Normal.Y * sphere.Center.Y + p.Normal.Z * sphere.Center.Z);
+
+                if (distance <= sphere.Radius)
+                {
+                    Vector3 intersection = sphere.Center + p.Normal * distance;
+                    Vector3 x = v2 - v1;
+                    Vector3 y = v3 - v1;
+                    Vector3 intersectionPrime = intersection - v1;
+
+                    Matrix a = new Matrix();
+                    a.M11 = x.X;
+                    a.M21 = x.Y;
+                    a.M31 = x.Z;
+                    a.M12 = y.X;
+                    a.M22 = y.Y;
+                    a.M32 = y.Z;
+
+                    Vector3 bary = Vector3.Transform(intersectionPrime, Matrix.Invert(a));
+                }
+            }
+
+            return false;
         }
     }
 }

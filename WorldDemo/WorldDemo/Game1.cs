@@ -98,26 +98,26 @@ namespace WorldDemo
             camera.DrawOrder = 0;
             Components.Add(camera);
 
-            //InitializeFloor();
+            InitializeFloor();
             
             base.Initialize();
         }
 
-        //private void InitializeFloor()
-        //{
-        //    floorVertices = new VertexPositionNormalTexture[6];
+        private void InitializeFloor()
+        {
+            floorVertices = new VertexPositionNormalTexture[6];
 
-        //    floorVertices[0] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.One);
-        //    floorVertices[1] = new VertexPositionNormalTexture(new Vector3(-1000, 0, 1000), Vector3.Up, new Vector2(0f, 1f));
-        //    floorVertices[2] = new VertexPositionNormalTexture(new Vector3(-1000, 0, -1000), Vector3.Up, Vector2.Zero);
+            floorVertices[0] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.One);
+            floorVertices[1] = new VertexPositionNormalTexture(new Vector3(-1000, 0, 1000), Vector3.Up, new Vector2(0f, 1f));
+            floorVertices[2] = new VertexPositionNormalTexture(new Vector3(-1000, 0, -1000), Vector3.Up, Vector2.Zero);
 
-        //    floorVertices[3] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.One);
-        //    floorVertices[4] = new VertexPositionNormalTexture(new Vector3(-1000, 0, -1000), Vector3.Up, Vector2.Zero);
-        //    floorVertices[5] = new VertexPositionNormalTexture(new Vector3(1000, 0, -1000), Vector3.Up, new Vector2(1f, 0f));
+            floorVertices[3] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.One);
+            floorVertices[4] = new VertexPositionNormalTexture(new Vector3(-1000, 0, -1000), Vector3.Up, Vector2.Zero);
+            floorVertices[5] = new VertexPositionNormalTexture(new Vector3(1000, 0, -1000), Vector3.Up, new Vector2(1f, 0f));
 
-        //    physics.AddCollidable(new Triangle(floorVertices[1].Position, floorVertices[0].Position, floorVertices[2].Position));
-        //    physics.AddCollidable(new Triangle(floorVertices[4].Position, floorVertices[3].Position, floorVertices[5].Position));
-        //}
+            physics.AddCollidable(new Triangle(floorVertices[1].Position, floorVertices[0].Position, floorVertices[2].Position));
+            physics.AddCollidable(new Triangle(floorVertices[4].Position, floorVertices[3].Position, floorVertices[5].Position));
+        }
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -145,7 +145,7 @@ namespace WorldDemo
             courtyard.ModelEffect = effect;
             camera.Effect = effect;
 
-            physics.AddCollidables(courtyard.GetPlanes());
+            //physics.AddCollidables(courtyard.GetPlanes());
 
             InitializeTransform();
         }
@@ -279,7 +279,7 @@ namespace WorldDemo
             
             base.Draw(gameTime);
 
-            //DrawFloor();
+            DrawFloor();
         }
 
         private void DrawFloor()
