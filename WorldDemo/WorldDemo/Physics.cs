@@ -36,6 +36,7 @@ namespace WorldDemo
         {
             foreach (PhysicsBody body in bodies)
             {
+                body.Normal = Vector3.Zero;
                 body.ApplyForce(gravity);
 
                 // check collisions

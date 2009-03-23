@@ -79,19 +79,19 @@ namespace WorldDemo
 
         public void MoveForward()
         {
-            //position += facing;
-            testBody.ApplyForce(facing * 100);
+            if(testBody.Normal != Vector3.Zero)
+                testBody.ApplyForce(facing * 200f);
         }
 
         public void MoveBackward()
         {
-            //position -= facing;
-            testBody.ApplyForce(Vector3.Negate(facing * 100));
+            if (testBody.Normal != Vector3.Zero)
+                testBody.ApplyForce(Vector3.Negate(facing * 200f));
         }
 
         internal void Jump()
         {
-            testBody.ApplyForce(Vector3.Up * 19.6f * testBody.Normal);
+            testBody.ApplyForce(Vector3.Up * 200f * testBody.Normal);
         }
     }
 }

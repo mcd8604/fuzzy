@@ -65,27 +65,27 @@ namespace WorldDemo
             
             avatar = new Avatar(this, "sphere", testBody);
             avatar.DrawOrder = 1;
-            avatar.Position = new Vector3(0, 10, 0);
+            avatar.Position = new Vector3(0, 5, 0);
             Components.Add(avatar);
 
             sphere1 = new ModelComponent(this, "sphere", "Checker");
             sphere1.DrawOrder = 1;
-            sphere1.Position = new Vector3(10, 10, 10);
+            sphere1.Position = new Vector3(10, 5, 10);
             Components.Add(sphere1);
 
             sphere2 = new ModelComponent(this, "sphere", "Checker");
             sphere2.DrawOrder = 1;
-            sphere2.Position = new Vector3(-10, 10, 10);
+            sphere2.Position = new Vector3(-10, 5, 10);
             Components.Add(sphere2);
 
             sphere3 = new ModelComponent(this, "sphere", "Checker");
             sphere3.DrawOrder = 1;
-            sphere3.Position = new Vector3(10, 10, -10);
+            sphere3.Position = new Vector3(10, 5, -10);
             Components.Add(sphere3);
 
             sphere4 = new ModelComponent(this, "sphere", "Checker");
             sphere4.DrawOrder = 1;
-            sphere4.Position = new Vector3(-10, 10, -10);
+            sphere4.Position = new Vector3(-10, 5, -10);
             Components.Add(sphere4);
 
             camera = new Camera(this);
