@@ -82,23 +82,43 @@ namespace WorldDemo
 
         private void GenerateBoundingSphere()
         {
-            List<Vector3> vertices = new List<Vector3>();
+            bounds = new BoundingSphere();
+
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                bounds = BoundingSphere.CreateMerged(bounds, mesh.BoundingSphere);
+            }
+        }
+
+        public List<Triangle> GetPlanes()
+        {
+            List<Triangle> planes = new List<Triangle>();
 
             foreach (ModelMesh mesh in model.Meshes)
             {
                 int numVertices = 0;
+                int numPrimitives = 0;
+
                 foreach (ModelMeshPart part in mesh.MeshParts)
                 {
                     numVertices += part.NumVertices;
+                    numPrimitives += part.PrimitiveCount;
                 }
 
-                Vector3[] vertexArray = new Vector3[numVertices];
-                mesh.VertexBuffer.GetData<Vector3>(vertexArray);
+                Vector3[] vertices = new Vector3[numVertices];
+                mesh.VertexBuffer.GetData<Vector3>(vertices);
 
-                vertices.AddRange(vertexArray);
+                short[] indices = new short[numPrimitives];
+                mesh.IndexBuffer.GetData<short>(indices);
+
+                for(int i = 0; i < indices.Length; i += 3)
+                {
+                    planes.Add(new Triangle(vertices[i], vertices[i + 1], vertices[i + 2]));
+                }
+
             }
 
-            bounds = BoundingSphere.CreateFromPoints(vertices);
+            return planes;
         }
 
         public override void Draw(GameTime gameTime)

@@ -17,7 +17,7 @@ namespace WorldDemo
 
         protected List<PhysicsBody> bodies = new List<PhysicsBody>();
 
-        protected List<Plane> collidables = new List<Plane>();
+        protected List<Triangle> collidables = new List<Triangle>();
 
         public Physics(Game game)
             : base(game) { }
@@ -27,9 +27,14 @@ namespace WorldDemo
             bodies.Add(body);            
         }
 
-        public void AddCollidable(Plane p)
+        public void AddCollidable(Triangle p)
         {
             collidables.Add(p);
+        }
+
+        public void AddCollidables(List<Triangle> p)
+        {
+            collidables.AddRange(p);
         }
 
         public override void Update(GameTime gameTime)
@@ -40,9 +45,9 @@ namespace WorldDemo
                 body.ApplyForce(gravity);
 
                 // check collisions
-                foreach (Plane p in collidables)
+                foreach (Triangle p in collidables)
                 {
-                    if (body.Bounds.Intersects(p) == PlaneIntersectionType.Intersecting)
+                    if (p.Intersects(body.Bounds))
                     {
                         if (body.Force.Length() > 0)
                         {
