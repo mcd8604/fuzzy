@@ -91,7 +91,7 @@ namespace WorldDemo
 
         internal void Jump()
         {
-            testBody.ApplyForce(Vector3.Up * 19.6f);
+            testBody.ApplyForce(Vector3.Up * 19.6f * testBody.Normal);
         }
     }
 }

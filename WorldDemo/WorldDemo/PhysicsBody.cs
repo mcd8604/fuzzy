@@ -11,7 +11,7 @@ namespace WorldDemo
         /// <summary>
         /// Mass (kg)
         /// </summary>
-        protected float mass = 1f;
+        protected const float mass = 1f;
 
         /// <summary>
         /// Current net force
@@ -22,11 +22,6 @@ namespace WorldDemo
         {
             get { return force; }
         }
-
-        /// <summary>
-        /// Current momentum
-        /// </summary>
-        //protected Vector3 momentum = Vector3.Zero;
 
         /// <summary>
         /// Current acceleration
@@ -65,20 +60,26 @@ namespace WorldDemo
             get { return bounds; }
         }
 
+        protected Vector3 collisionNormal = Vector3.Zero;
+
+        /// <summary>
+        /// Average of collision surface normals
+        /// </summary>
+        public Vector3 Normal
+        {
+            get { return collisionNormal; }
+            set { collisionNormal = value; }
+        }
+
         public void Update(GameTime time)
         {
             float dT = (float)time.ElapsedGameTime.TotalSeconds;
-
-            //momentum = dT * force;
 
             // Euler integration
 
             acceleration = force / mass;
 
             velocity += acceleration * dT;
-
-            // fake friction
-            //velocity += Vector3.Negate(velocity) * .01f;
 
             bounds.Center += velocity * dT;
         }
@@ -92,5 +93,6 @@ namespace WorldDemo
         {
             this.force += force;
         }
+
     }
 }

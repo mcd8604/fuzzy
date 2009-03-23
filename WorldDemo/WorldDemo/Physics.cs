@@ -10,6 +10,11 @@ namespace WorldDemo
     {
         protected Vector3 gravity = new Vector3(0, -9.8f, 0);
 
+        /// <summary>
+        /// Arbitrary frictional coefficient for two sliding surfaces
+        /// </summary>
+        protected const float friction = 0.2f;
+
         protected List<PhysicsBody> bodies = new List<PhysicsBody>();
 
         protected List<Plane> collidables = new List<Plane>();
@@ -40,11 +45,12 @@ namespace WorldDemo
                     {
                         if (body.Force.Length() > 0)
                         {
-                            body.ApplyForce(Vector3.Dot(p.Normal, Vector3.Normalize(body.Force)) * Vector3.Negate(body.Force));
+                            body.ApplyForce(Vector3.Dot(p.Normal, Vector3.Normalize(Vector3.Negate(gravity))) * gravity.Length() * p.Normal);
+                            body.Normal = Vector3.Normalize(body.Normal + p.Normal);
                         }
                         if (body.Velocity.Length() > 0)
                         {
-                            body.Velocity = Vector3.Dot(p.Normal, Vector3.Normalize(body.Velocity)) * Vector3.Reflect(body.Velocity, p.Normal);
+                            body.Velocity = Vector3.Dot(p.Normal, Vector3.Normalize(body.Velocity)) * friction * Vector3.Reflect(body.Velocity, p.Normal);
                         }
                     }
                 }
