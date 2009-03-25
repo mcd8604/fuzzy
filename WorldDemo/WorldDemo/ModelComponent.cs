@@ -96,32 +96,18 @@ namespace WorldDemo
 
             foreach (ModelMesh mesh in model.Meshes)
             {
-                int numVertices = 0;
-                int numPrimitives = 0;
-
-                foreach (ModelMeshPart part in mesh.MeshParts)
-                {
-                    numVertices += part.NumVertices;
-                    numPrimitives += part.PrimitiveCount;
-                }
-
-                Vector3[] vertices = new Vector3[mesh.VertexBuffer.SizeInBytes / mesh.MeshParts[0].VertexStride];
-                mesh.VertexBuffer.GetData<Vector3>(vertices);
-
-                VertexPositionNormalTexture[] test = new VertexPositionNormalTexture[mesh.VertexBuffer.SizeInBytes / mesh.MeshParts[0].VertexStride];
-                mesh.VertexBuffer.GetData<VertexPositionNormalTexture>(test);
+                VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[mesh.VertexBuffer.SizeInBytes / mesh.MeshParts[0].VertexStride];
+                mesh.VertexBuffer.GetData<VertexPositionNormalTexture>(vertices);
 
                 if (mesh.IndexBuffer.IndexElementSize == IndexElementSize.SixteenBits) 
                 {
-                    // Why is the index buffer size different?
-                    //Int16[] indices = new Int16[mesh.IndexBuffer.SizeInBytes >> 1];
+                    Int16[] indices = new Int16[mesh.IndexBuffer.SizeInBytes >> 1];
                     
-                    Int16[] indices = new Int16[vertices.Length];
                     mesh.IndexBuffer.GetData<Int16>(indices);
 
-                    for(short i = 0; i + 2 < indices.Length; i += 3)
+                    for(short i = 0; i < indices.Length; i += 3)
                     {
-                        planes.Add(new Triangle(vertices[i], vertices[i + 1], vertices[i + 2]));
+                        planes.Add(new Triangle(vertices[indices[i]].Position, vertices[indices[i + 1]].Position, vertices[indices[i + 2]].Position));
                     }
                 }
                 else if (mesh.IndexBuffer.IndexElementSize == IndexElementSize.ThirtyTwoBits)
@@ -129,9 +115,9 @@ namespace WorldDemo
                     Int32[] indices = new Int32[mesh.IndexBuffer.SizeInBytes >> 2];
                     mesh.IndexBuffer.GetData<Int32>(indices);
 
-                    for(int i = 0; i + 2 < indices.Length; i += 3)
+                    for(int i = 0; i < indices.Length; i += 3)
                     {
-                        planes.Add(new Triangle(vertices[i], vertices[i + 1], vertices[i + 2]));
+                        planes.Add(new Triangle(vertices[indices[i]].Position, vertices[indices[i + 1]].Position, vertices[indices[i + 2]].Position));
                     }
                 }
 

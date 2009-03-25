@@ -80,7 +80,7 @@ namespace WorldDemo
         public void MoveForward()
         {
             if(testBody.Normal != Vector3.Zero)
-                testBody.ApplyForce(facing * 200f);
+                testBody.ApplyForce(facing * 500f);
         }
 
         public void MoveBackward()

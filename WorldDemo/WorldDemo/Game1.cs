@@ -115,8 +115,8 @@ namespace WorldDemo
             floorVertices[4] = new VertexPositionNormalTexture(new Vector3(-50, 0, -50), Vector3.Up, Vector2.Zero);
             floorVertices[5] = new VertexPositionNormalTexture(new Vector3(50, 0, -50), Vector3.Up, new Vector2(1f, 0f));
 
-            physics.AddCollidable(new Triangle(floorVertices[0].Position, floorVertices[1].Position, floorVertices[2].Position));
-            physics.AddCollidable(new Triangle(floorVertices[3].Position, floorVertices[4].Position, floorVertices[5].Position));
+           // physics.AddCollidable(new Triangle(floorVertices[0].Position, floorVertices[1].Position, floorVertices[2].Position));
+           // physics.AddCollidable(new Triangle(floorVertices[3].Position, floorVertices[4].Position, floorVertices[5].Position));
         }
 
         /// <summary>
@@ -145,8 +145,8 @@ namespace WorldDemo
             courtyard.ModelEffect = effect;
             camera.Effect = effect;
 
-            courtyard.Visible = false;
-            //physics.AddCollidables(courtyard.GetPlanes());
+            //courtyard.Visible = false;
+            physics.AddCollidables(courtyard.GetPlanes());
 
             InitializeTransform();
         }
