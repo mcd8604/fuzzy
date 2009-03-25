@@ -47,7 +47,7 @@ namespace WorldDemo
 
             boundPlane1 = new Plane(v1, v2, v1 + p.Normal * 1);
             boundPlane2 = new Plane(v2, v3, v2 + p.Normal * 1);
-            boundPlane2 = new Plane(v3, v1, v3 + p.Normal * 1);
+            boundPlane3 = new Plane(v3, v1, v3 + p.Normal * 1);
         }
 
         public bool Intersects(BoundingSphere sphere)
@@ -56,28 +56,40 @@ namespace WorldDemo
             if (sphere.Intersects(p) != PlaneIntersectionType.Intersecting)
                 return false;
 
+            if (sphere.Intersects(boundPlane1) == PlaneIntersectionType.Back)
+                return false;
+
+            if (sphere.Intersects(boundPlane2) == PlaneIntersectionType.Back)
+                return false;
+
+            if (sphere.Intersects(boundPlane3) == PlaneIntersectionType.Back)
+                return false;
+
+            //if (sphere.Intersects(boundPlane1) == PlaneIntersectionType.Intersecting &&
+            //    sphere.Center.
+
             // Check distance 
-            float dist = Vector3.Dot(p.Normal, sphere.Center);
+            //float dist = Vector3.Dot(p.Normal, sphere.Center);
 
-            if (dist > sphere.Radius)
-                return false;
+            //if (dist > sphere.Radius)
+            //    return false;
 
-            // Check each bound plane for intersection
+            //// Check each bound plane for intersection
 
-            float b1Dist = Vector3.Dot(boundPlane1.Normal, sphere.Center);
+            //float b1Dist = Vector3.Dot(boundPlane1.Normal, sphere.Center);
 
-            if (b1Dist > sphere.Radius)
-                return false;
+            //if (b1Dist > sphere.Radius)
+            //    return false;
 
-            float b2Dist = Vector3.Dot(boundPlane2.Normal, sphere.Center);
+            //float b2Dist = Vector3.Dot(boundPlane2.Normal, sphere.Center);
 
-            if (b2Dist > sphere.Radius)
-                return false;
+            //if (b2Dist > sphere.Radius)
+            //    return false;
 
-            float b3Dist = Vector3.Dot(boundPlane3.Normal, sphere.Center);
+            //float b3Dist = Vector3.Dot(boundPlane3.Normal, sphere.Center);
 
-            if (b3Dist > sphere.Radius)
-                return false;
+            //if (b3Dist > sphere.Radius)
+            //    return false;
 
             //Vector3 intersection = sphere.Center + p.Normal * distance;
             //Vector3 x = v2 - v1;
