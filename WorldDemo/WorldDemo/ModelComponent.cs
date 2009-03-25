@@ -105,16 +105,36 @@ namespace WorldDemo
                     numPrimitives += part.PrimitiveCount;
                 }
 
-                Vector3[] vertices = new Vector3[numVertices];
+                Vector3[] vertices = new Vector3[mesh.VertexBuffer.SizeInBytes / mesh.MeshParts[0].VertexStride];
                 mesh.VertexBuffer.GetData<Vector3>(vertices);
 
-                short[] indices = new short[numPrimitives];
-                mesh.IndexBuffer.GetData<short>(indices);
+                VertexPositionNormalTexture[] test = new VertexPositionNormalTexture[mesh.VertexBuffer.SizeInBytes / mesh.MeshParts[0].VertexStride];
+                mesh.VertexBuffer.GetData<VertexPositionNormalTexture>(test);
 
-                for(int i = 0; i < indices.Length; i += 3)
+                if (mesh.IndexBuffer.IndexElementSize == IndexElementSize.SixteenBits) 
                 {
-                    planes.Add(new Triangle(vertices[i], vertices[i + 1], vertices[i + 2]));
+                    // Why is the index buffer size different?
+                    //Int16[] indices = new Int16[mesh.IndexBuffer.SizeInBytes >> 1];
+                    
+                    Int16[] indices = new Int16[vertices.Length];
+                    mesh.IndexBuffer.GetData<Int16>(indices);
+
+                    for(short i = 0; i + 2 < indices.Length; i += 3)
+                    {
+                        planes.Add(new Triangle(vertices[i], vertices[i + 1], vertices[i + 2]));
+                    }
                 }
+                else if (mesh.IndexBuffer.IndexElementSize == IndexElementSize.ThirtyTwoBits)
+                {
+                    Int32[] indices = new Int32[mesh.IndexBuffer.SizeInBytes >> 2];
+                    mesh.IndexBuffer.GetData<Int32>(indices);
+
+                    for(int i = 0; i + 2 < indices.Length; i += 3)
+                    {
+                        planes.Add(new Triangle(vertices[i], vertices[i + 1], vertices[i + 2]));
+                    }
+                }
+
 
             }
 

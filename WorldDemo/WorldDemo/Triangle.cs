@@ -10,9 +10,27 @@ namespace WorldDemo
     {
         protected Plane p;
 
+        protected Plane boundPlane1;
+        protected Plane boundPlane2;
+        protected Plane boundPlane3;
+
         protected Vector3 v1;
+        public Vector3 V1
+        {
+            get { return v1; }
+        }
+        
         protected Vector3 v2;
+        public Vector3 V2
+        {
+            get { return v2; }
+        }
+
         protected Vector3 v3;
+        public Vector3 V3
+        {
+            get { return v3; }
+        }
 
         public Vector3 Normal
         {
@@ -25,39 +43,58 @@ namespace WorldDemo
             v2 = p2;
             v3 = p3;
 
-            p = new Plane(v1, v2, v3);
+            p = new Plane(v2, v1, v3);
+
+            boundPlane1 = new Plane(v1, v2, v1 + p.Normal * 1);
+            boundPlane2 = new Plane(v2, v3, v2 + p.Normal * 1);
+            boundPlane2 = new Plane(v3, v1, v3 + p.Normal * 1);
         }
 
         public bool Intersects(BoundingSphere sphere)
         {
             // First, check for planar intersection
-            if (sphere.Intersects(p) == PlaneIntersectionType.Intersecting)
-            {
-                // Next, check barycentric coords
+            if (sphere.Intersects(p) != PlaneIntersectionType.Intersecting)
+                return false;
 
-                // D = -(A*x0+B*y0+C*z0)
-                float distance = -(p.Normal.X * sphere.Center.X + p.Normal.Y * sphere.Center.Y + p.Normal.Z * sphere.Center.Z);
+            // Check distance 
+            float dist = Vector3.Dot(p.Normal, sphere.Center);
 
-                if (distance <= sphere.Radius)
-                {
-                    Vector3 intersection = sphere.Center + p.Normal * distance;
-                    Vector3 x = v2 - v1;
-                    Vector3 y = v3 - v1;
-                    Vector3 intersectionPrime = intersection - v1;
+            if (dist > sphere.Radius)
+                return false;
 
-                    Matrix a = new Matrix();
-                    a.M11 = x.X;
-                    a.M21 = x.Y;
-                    a.M31 = x.Z;
-                    a.M12 = y.X;
-                    a.M22 = y.Y;
-                    a.M32 = y.Z;
+            // Check each bound plane for intersection
 
-                    Vector3 bary = Vector3.Transform(intersectionPrime, Matrix.Invert(a));
-                }
-            }
+            float b1Dist = Vector3.Dot(boundPlane1.Normal, sphere.Center);
 
-            return false;
+            if (b1Dist > sphere.Radius)
+                return false;
+
+            float b2Dist = Vector3.Dot(boundPlane2.Normal, sphere.Center);
+
+            if (b2Dist > sphere.Radius)
+                return false;
+
+            float b3Dist = Vector3.Dot(boundPlane3.Normal, sphere.Center);
+
+            if (b3Dist > sphere.Radius)
+                return false;
+
+            //Vector3 intersection = sphere.Center + p.Normal * distance;
+            //Vector3 x = v2 - v1;
+            //Vector3 y = v3 - v1;
+            //Vector3 intersectionPrime = intersection - v1;
+
+            //Matrix a = new Matrix();
+            //a.M11 = x.X;
+            //a.M21 = x.Y;
+            //a.M31 = x.Z;
+            //a.M12 = y.X;
+            //a.M22 = y.Y;
+            //a.M32 = y.Z;
+
+            //Vector3 bary = Vector3.Transform(intersectionPrime, Matrix.Invert(a));
+            
+            return true;
         }
     }
 }

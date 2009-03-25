@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace WorldDemo
 {
@@ -19,6 +20,13 @@ namespace WorldDemo
 
         protected List<Triangle> collidables = new List<Triangle>();
 
+        protected List<VertexPositionNormalTexture> vertices = new List<VertexPositionNormalTexture>();
+        protected VertexPositionNormalTexture[] vertexArray;
+        public VertexPositionNormalTexture[] Vertices
+        {
+            get { return vertexArray; }
+        }
+
         public Physics(Game game)
             : base(game) { }
 
@@ -30,11 +38,22 @@ namespace WorldDemo
         public void AddCollidable(Triangle p)
         {
             collidables.Add(p);
+            vertices.Add(new VertexPositionNormalTexture(p.V1, p.Normal, Vector2.Zero));
+            vertices.Add(new VertexPositionNormalTexture(p.V2, p.Normal, Vector2.Zero));
+            vertices.Add(new VertexPositionNormalTexture(p.V3, p.Normal, Vector2.Zero));
+            vertexArray = vertices.ToArray();
         }
 
         public void AddCollidables(List<Triangle> p)
         {
             collidables.AddRange(p);
+            foreach (Triangle t in p)
+            {
+                vertices.Add(new VertexPositionNormalTexture(t.V1, t.Normal, Vector2.Zero));
+                vertices.Add(new VertexPositionNormalTexture(t.V2, t.Normal, Vector2.Zero));
+                vertices.Add(new VertexPositionNormalTexture(t.V3, t.Normal, Vector2.Zero));
+            }
+            vertexArray = vertices.ToArray();
         }
 
         public override void Update(GameTime gameTime)

@@ -66,7 +66,7 @@ namespace WorldDemo
             
             avatar = new Avatar(this, "sphere", testBody);
             avatar.DrawOrder = 1;
-            avatar.Position = new Vector3(-75, 50, 0);
+            avatar.Position = new Vector3(-25, 10, 0);
             Components.Add(avatar);
 
             sphere1 = new ModelComponent(this, "sphere", "Checker");
@@ -107,16 +107,16 @@ namespace WorldDemo
         {
             floorVertices = new VertexPositionNormalTexture[6];
 
-            floorVertices[0] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.One);
-            floorVertices[1] = new VertexPositionNormalTexture(new Vector3(-1000, 0, 1000), Vector3.Up, new Vector2(0f, 1f));
-            floorVertices[2] = new VertexPositionNormalTexture(new Vector3(-1000, 0, -1000), Vector3.Up, Vector2.Zero);
+            floorVertices[0] = new VertexPositionNormalTexture(new Vector3(50, 0, 50), Vector3.Up, new Vector2(1f, 1f));
+            floorVertices[1] = new VertexPositionNormalTexture(new Vector3(-50, 0, 50), Vector3.Up, new Vector2(0f, 1f));
+            floorVertices[2] = new VertexPositionNormalTexture(new Vector3(-50, 0, -50), Vector3.Up, Vector2.Zero);
 
-            floorVertices[3] = new VertexPositionNormalTexture(new Vector3(1000, 0, 1000), Vector3.Up, Vector2.One);
-            floorVertices[4] = new VertexPositionNormalTexture(new Vector3(-1000, 0, -1000), Vector3.Up, Vector2.Zero);
-            floorVertices[5] = new VertexPositionNormalTexture(new Vector3(1000, 0, -1000), Vector3.Up, new Vector2(1f, 0f));
+            floorVertices[3] = new VertexPositionNormalTexture(new Vector3(50, 0, 50), Vector3.Up, new Vector2(1f, 1f));
+            floorVertices[4] = new VertexPositionNormalTexture(new Vector3(-50, 0, -50), Vector3.Up, Vector2.Zero);
+            floorVertices[5] = new VertexPositionNormalTexture(new Vector3(50, 0, -50), Vector3.Up, new Vector2(1f, 0f));
 
-            physics.AddCollidable(new Triangle(floorVertices[1].Position, floorVertices[0].Position, floorVertices[2].Position));
-            physics.AddCollidable(new Triangle(floorVertices[4].Position, floorVertices[3].Position, floorVertices[5].Position));
+            physics.AddCollidable(new Triangle(floorVertices[0].Position, floorVertices[1].Position, floorVertices[2].Position));
+            physics.AddCollidable(new Triangle(floorVertices[3].Position, floorVertices[4].Position, floorVertices[5].Position));
         }
 
         /// <summary>
@@ -145,6 +145,7 @@ namespace WorldDemo
             courtyard.ModelEffect = effect;
             camera.Effect = effect;
 
+            courtyard.Visible = false;
             //physics.AddCollidables(courtyard.GetPlanes());
 
             InitializeTransform();
@@ -279,7 +280,9 @@ namespace WorldDemo
             
             base.Draw(gameTime);
 
-            DrawFloor();
+            //DrawFloor();
+
+            DrawCollidables();
         }
 
         private void DrawFloor()
@@ -293,6 +296,22 @@ namespace WorldDemo
                 pass.End();
             }
             effect.End();
+        }
+
+        private void DrawCollidables()
+        {
+            if (physics.Vertices.Length > 0)
+            {
+                effect.Parameters["BasicTexture"].SetValue(texture);
+                effect.Begin();
+                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                {
+                    pass.Begin();
+                    GraphicsDevice.DrawUserPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, physics.Vertices, 0, physics.Vertices.Length / 3);
+                    pass.End();
+                }
+                effect.End();
+            }
         }
 
     }
