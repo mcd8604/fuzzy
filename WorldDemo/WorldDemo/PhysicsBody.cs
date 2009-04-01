@@ -12,6 +12,10 @@ namespace WorldDemo
         /// Mass (kg)
         /// </summary>
         protected const float mass = 1f;
+        public float Mass
+        {
+            get { return mass; }
+        }
 
         /// <summary>
         /// Current net force

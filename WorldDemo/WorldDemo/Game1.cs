@@ -1,3 +1,7 @@
+#undef FLOOR_TEST
+#undef DRAW_COLLIDABLES
+#define WIREFRAME
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,11 +35,15 @@ namespace WorldDemo
         ModelComponent sphere1;
         ModelComponent sphere2;
         ModelComponent sphere3;
-        ModelComponent sphere4;
-        ModelComponent courtyard;
+        ModelComponent sphere4;        
         Texture2D texture;
 
+#if FLOOR_TEST
         VertexPositionNormalTexture[] floorVertices;
+#else 
+        ModelComponent courtyard;
+#endif
+
         VertexDeclaration vpntDeclaration;
 
         Physics physics;
@@ -88,21 +96,22 @@ namespace WorldDemo
             sphere4.DrawOrder = 1;
             sphere4.Position = new Vector3(-10, 5, -10);
             Components.Add(sphere4);
-
+#if !FLOOR_TEST
             courtyard = new ModelComponent(this, "courtyard", "Checker");
             courtyard.DrawOrder = 1;
             Components.Add(courtyard);
-
+#endif
             camera = new Camera(this);
             camera.Position = cameraOffset;
             camera.DrawOrder = 0;
             Components.Add(camera);
-
+#if FLOOR_TEST
             InitializeFloor();
-            
+#endif
             base.Initialize();
         }
 
+#if FLOOR_TEST
         private void InitializeFloor()
         {
             floorVertices = new VertexPositionNormalTexture[6];
@@ -115,9 +124,10 @@ namespace WorldDemo
             floorVertices[4] = new VertexPositionNormalTexture(new Vector3(-50, 0, -50), Vector3.Up, Vector2.Zero);
             floorVertices[5] = new VertexPositionNormalTexture(new Vector3(50, 0, -50), Vector3.Up, new Vector2(1f, 0f));
 
-           // physics.AddCollidable(new Triangle(floorVertices[0].Position, floorVertices[1].Position, floorVertices[2].Position));
-           // physics.AddCollidable(new Triangle(floorVertices[3].Position, floorVertices[4].Position, floorVertices[5].Position));
+            physics.AddCollidable(new Triangle(floorVertices[0].Position, floorVertices[1].Position, floorVertices[2].Position));
+            physics.AddCollidable(new Triangle(floorVertices[3].Position, floorVertices[4].Position, floorVertices[5].Position));
         }
+#endif
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -130,6 +140,10 @@ namespace WorldDemo
 
             // TODO: use this.Content to load your game content here
 
+#if WIREFRAME      
+            GraphicsDevice.RenderState.FillMode = FillMode.WireFrame;
+#endif
+
             vpntDeclaration = new VertexDeclaration(GraphicsDevice, VertexPositionNormalTexture.VertexElements);
             GraphicsDevice.VertexDeclaration = vpntDeclaration;
 
@@ -137,17 +151,20 @@ namespace WorldDemo
 
             InitializeEffect();
 
+            camera.Effect = effect;
+            
             avatar.ModelEffect = effect;
             sphere1.ModelEffect = effect;
             sphere2.ModelEffect = effect;
             sphere3.ModelEffect = effect;
             sphere4.ModelEffect = effect;
+#if !FLOOR_TEST
             courtyard.ModelEffect = effect;
-            camera.Effect = effect;
-
-            //courtyard.Visible = false;
+#if DRAW_COLLIDABLES
+            courtyard.Visible = false;
+#endif
             physics.AddCollidables(courtyard.GetPlanes());
-
+#endif
             InitializeTransform();
         }
 
@@ -171,16 +188,6 @@ namespace WorldDemo
 		/// </summary>
         private void InitializeEffect()
         {
-            //effect = Content.Load<Effect>("Basic");
-
-            //effect.Parameters["lightPos"].SetValue(new Vector4(20f, 20f, 20f, 1f));
-            //effect.Parameters["lightColor"].SetValue(Vector4.One);
-
-            //effect.Parameters["AmbientLightColor"].SetValue(new Vector4(.2f, .2f, .2f, 1f));
-            //effect.Parameters["DiffusePower"].SetValue(1f);
-            //effect.Parameters["SpecularPower"].SetValue(1);
-            //effect.Parameters["exponent"].SetValue(8);
-
             effect = new BasicEffect(GraphicsDevice, new EffectPool());
 
             effect.LightingEnabled = true;
@@ -280,11 +287,16 @@ namespace WorldDemo
             
             base.Draw(gameTime);
 
-            //DrawFloor();
+#if FLOOR_TEST
+            DrawFloor();
+#endif
 
+#if DRAW_COLLIDABLES
             DrawCollidables();
+#endif
         }
 
+#if FLOOR_TEST
         private void DrawFloor()
         {
             effect.Parameters["BasicTexture"].SetValue(texture);
@@ -297,7 +309,9 @@ namespace WorldDemo
             }
             effect.End();
         }
+#endif
 
+#if DRAW_COLLIDABLES
         private void DrawCollidables()
         {
             if (physics.Vertices.Length > 0)
@@ -313,6 +327,6 @@ namespace WorldDemo
                 effect.End();
             }
         }
-
+#endif
     }
 }

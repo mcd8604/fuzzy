@@ -10,9 +10,13 @@ namespace WorldDemo
     {
         protected Plane p;
 
-        protected Plane boundPlane1;
-        protected Plane boundPlane2;
-        protected Plane boundPlane3;
+        protected Plane boundPlane12;
+        protected Plane boundPlane23;
+        protected Plane boundPlane31;
+
+        protected Ray ray12;
+        protected Ray ray23;
+        protected Ray ray31;
 
         protected Vector3 v1;
         public Vector3 V1
@@ -45,9 +49,13 @@ namespace WorldDemo
 
             p = new Plane(v2, v1, v3);
 
-            boundPlane1 = new Plane(v1, v2, v1 + p.Normal * 1);
-            boundPlane2 = new Plane(v2, v3, v2 + p.Normal * 1);
-            boundPlane3 = new Plane(v3, v1, v3 + p.Normal * 1);
+            boundPlane12 = new Plane(v1, v2, v1 + p.Normal);
+            boundPlane23 = new Plane(v2, v3, v2 + p.Normal);
+            boundPlane31 = new Plane(v3, v1, v3 + p.Normal);
+
+            ray12 = new Ray(v1, v2 - v1);
+            ray23 = new Ray(v2, v3 - v2);
+            ray31 = new Ray(v3, v1 - v3);
         }
 
         public bool Intersects(BoundingSphere sphere)
@@ -56,55 +64,50 @@ namespace WorldDemo
             if (sphere.Intersects(p) != PlaneIntersectionType.Intersecting)
                 return false;
 
-            if (sphere.Intersects(boundPlane1) == PlaneIntersectionType.Back)
+            // Exit if the sphere is disjoint with the bounds of the triangle
+            if (sphere.Intersects(boundPlane12) == PlaneIntersectionType.Back)
+                return false;
+            if (sphere.Intersects(boundPlane23) == PlaneIntersectionType.Back)
+                return false;
+            if (sphere.Intersects(boundPlane31) == PlaneIntersectionType.Back)
                 return false;
 
-            if (sphere.Intersects(boundPlane2) == PlaneIntersectionType.Back)
-                return false;
+            // Test if the center of the sphere is past the bounds of the triangle
 
-            if (sphere.Intersects(boundPlane3) == PlaneIntersectionType.Back)
-                return false;
+            if (sphere.Intersects(boundPlane12) == PlaneIntersectionType.Intersecting &&
+                boundPlane12.DotCoordinate(sphere.Center) < 0)
+            {
+                // Project the point onto the edge
 
-            //if (sphere.Intersects(boundPlane1) == PlaneIntersectionType.Intersecting &&
-            //    sphere.Center.
+                Vector3 edge = v1 - v2;
+                Vector3 projPt = Vector3.Lerp(v1, v2, Vector3.Dot(v1 - sphere.Center, edge) / edge.LengthSquared());
 
-            // Check distance 
-            //float dist = Vector3.Dot(p.Normal, sphere.Center);
+                // Exit if the distance from the center to the triangle edge > radius
 
-            //if (dist > sphere.Radius)
-            //    return false;
+                if (Vector3.Distance(sphere.Center, projPt) > sphere.Radius)
+                    return false;
+                
+            }
 
-            //// Check each bound plane for intersection
+            if (sphere.Intersects(boundPlane23) == PlaneIntersectionType.Intersecting &&
+                boundPlane23.DotCoordinate(sphere.Center) < 0)
+            {
+                Vector3 edge = v2 - v3;
+                Vector3 projPt = Vector3.Lerp(v2, v3, Vector3.Dot(v2 - sphere.Center, edge) / edge.LengthSquared());
 
-            //float b1Dist = Vector3.Dot(boundPlane1.Normal, sphere.Center);
+                if (Vector3.Distance(sphere.Center, projPt) > sphere.Radius)
+                    return false;
+            }
+            
+            if (sphere.Intersects(boundPlane23) == PlaneIntersectionType.Intersecting &&
+                boundPlane31.DotCoordinate(sphere.Center) < 0)
+            {
+                Vector3 edge = v3 - v1;
+                Vector3 projPt = Vector3.Lerp(v3, v1, Vector3.Dot(v3 - sphere.Center, edge) / edge.LengthSquared());
 
-            //if (b1Dist > sphere.Radius)
-            //    return false;
-
-            //float b2Dist = Vector3.Dot(boundPlane2.Normal, sphere.Center);
-
-            //if (b2Dist > sphere.Radius)
-            //    return false;
-
-            //float b3Dist = Vector3.Dot(boundPlane3.Normal, sphere.Center);
-
-            //if (b3Dist > sphere.Radius)
-            //    return false;
-
-            //Vector3 intersection = sphere.Center + p.Normal * distance;
-            //Vector3 x = v2 - v1;
-            //Vector3 y = v3 - v1;
-            //Vector3 intersectionPrime = intersection - v1;
-
-            //Matrix a = new Matrix();
-            //a.M11 = x.X;
-            //a.M21 = x.Y;
-            //a.M31 = x.Z;
-            //a.M12 = y.X;
-            //a.M22 = y.Y;
-            //a.M32 = y.Z;
-
-            //Vector3 bary = Vector3.Transform(intersectionPrime, Matrix.Invert(a));
+                if (Vector3.Distance(sphere.Center, projPt) > sphere.Radius)
+                    return false;
+            }
             
             return true;
         }

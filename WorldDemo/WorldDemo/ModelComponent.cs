@@ -127,6 +127,18 @@ namespace WorldDemo
             return planes;
         }
 
+        public List<BoundingBox> GetBoundingBoxes()
+        {
+            List<BoundingBox> boxes = new List<BoundingBox>();
+
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                boxes.Add(BoundingBox.CreateFromSphere(mesh.BoundingSphere));
+            }
+
+            return boxes;
+        }
+
         public override void Draw(GameTime gameTime)
         {
             effect.Parameters["World"].SetValue(getTransform());

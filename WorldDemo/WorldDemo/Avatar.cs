@@ -80,18 +80,18 @@ namespace WorldDemo
         public void MoveForward()
         {
             if(testBody.Normal != Vector3.Zero)
-                testBody.ApplyForce(facing * 500f);
+                testBody.ApplyForce(facing * 1000f);
         }
 
         public void MoveBackward()
         {
             if (testBody.Normal != Vector3.Zero)
-                testBody.ApplyForce(Vector3.Negate(facing * 200f));
+                testBody.ApplyForce(Vector3.Negate(facing * 1000f));
         }
 
         internal void Jump()
         {
-            testBody.ApplyForce(Vector3.Up * 200f * testBody.Normal);
+            testBody.ApplyForce(200f * testBody.Normal);
         }
     }
 }
