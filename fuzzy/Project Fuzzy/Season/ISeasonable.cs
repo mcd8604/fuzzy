@@ -6,6 +6,6 @@ namespace Project_Fuzzy.Season
 {
     interface ISeasonable
     {
-        public void ChangeSeason(Seasons newSeason);
+        void ChangeSeason(Seasons newSeason);
     }
 }
