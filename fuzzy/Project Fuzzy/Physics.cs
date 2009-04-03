@@ -85,7 +85,7 @@ namespace Project_Fuzzy
                 // Apply Normal Force
                 if (body.Normal != Vector3.Zero)
                 {
-                    Vector3.Normalize(body.Normal);
+                    body.Normal = Vector3.Normalize(body.Normal);
 
                     if (body.Velocity.Length() > 0)
                     {
