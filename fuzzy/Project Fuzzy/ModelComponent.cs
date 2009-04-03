@@ -107,7 +107,21 @@ namespace Project_Fuzzy
 
                     for(int i = 0; i < indices.Length; i += 3)
                     {
-                        planes.Add(new Triangle(vertices[indices[i]].Position, vertices[indices[i + 1]].Position, vertices[indices[i + 2]].Position));
+                        if (vertices[indices[i]].Position != vertices[indices[i + 1]].Position &&
+                            vertices[indices[i + 1]].Position != vertices[indices[i + 2]].Position &&
+                            vertices[indices[i + 2]].Position != vertices[indices[i]].Position)
+                        {
+                            planes.Add(new Triangle(vertices[indices[i]].Position, vertices[indices[i + 1]].Position, vertices[indices[i + 2]].Position));
+                        }
+                        else
+                        {
+                            Console.WriteLine("Redundant vertices found!");
+                            Console.WriteLine("\tModel: " + modelName);
+                            Console.WriteLine("\tMesh: " + mesh.Name);
+                            Console.WriteLine("\tVertex 1: " + vertices[indices[i]].Position);
+                            Console.WriteLine("\tVertex 2: " + vertices[indices[i + 1]].Position);
+                            Console.WriteLine("\tVertex 3: " + vertices[indices[i + 2]].Position);
+                        }
                     }
                 }
                 else if (mesh.IndexBuffer.IndexElementSize == IndexElementSize.ThirtyTwoBits)
