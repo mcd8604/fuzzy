@@ -105,7 +105,7 @@ namespace Project_Fuzzy
                     
                     mesh.IndexBuffer.GetData<Int16>(indices);
 
-                    for(short i = 0; i < indices.Length; i += 3)
+                    for(int i = 0; i < indices.Length; i += 3)
                     {
                         planes.Add(new Triangle(vertices[indices[i]].Position, vertices[indices[i + 1]].Position, vertices[indices[i + 2]].Position));
                     }
