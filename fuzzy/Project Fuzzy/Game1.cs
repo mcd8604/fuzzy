@@ -1,6 +1,6 @@
 #undef FLOOR_TEST
 #undef DRAW_COLLIDABLES
-#define WIREFRAME
+#undef WIREFRAME
 
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using Project_Fuzzy.Inventory;
 
 namespace Project_Fuzzy
 {
@@ -24,6 +25,10 @@ namespace Project_Fuzzy
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        GUIInventory inventory;
+
+        KeyboardState lastState;
 
         Matrix projectionMatrix;
 
@@ -64,6 +69,7 @@ namespace Project_Fuzzy
         /// </summary>
         protected override void Initialize()
         {
+
             // TODO: Add your initialization logic here
             physics = new Physics(this);
             Components.Add(physics);
@@ -108,6 +114,13 @@ namespace Project_Fuzzy
 #if FLOOR_TEST
             InitializeFloor();
 #endif
+
+            inventory = new GUIInventory(this);
+            inventory.Visible = false;
+            inventory.Enabled = false;
+            inventory.DrawOrder = 2;
+            Components.Add(inventory);
+
             base.Initialize();
         }
 
@@ -137,6 +150,8 @@ namespace Project_Fuzzy
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+           
 
             // TODO: use this.Content to load your game content here
 
@@ -217,60 +232,80 @@ namespace Project_Fuzzy
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            KeyboardState keyboard = Keyboard.GetState();
+            KeyboardState currentState = Keyboard.GetState();
+            
 
-            if (keyboard.IsKeyDown(Keys.Escape))
+            if (currentState.IsKeyDown(Keys.Escape))
             {
                 this.Exit();
             }
 
-            if (keyboard.IsKeyDown(Keys.W))
+            if (currentState.IsKeyDown(Keys.W))
             {
                 avatar.MoveForward();
             }
 
-            if (keyboard.IsKeyDown(Keys.A))
+            if (currentState.IsKeyDown(Keys.A))
             {
                 avatar.TurnLeft();
             }
 
-            if (keyboard.IsKeyDown(Keys.S))
+            if (currentState.IsKeyDown(Keys.S))
             {
                 avatar.MoveBackward();
             }
 
-            if (keyboard.IsKeyDown(Keys.D))
+            if (currentState.IsKeyDown(Keys.D))
             {
                 avatar.TurnRight();
             }
 
-            if (keyboard.IsKeyDown(Keys.Up))
+            if (currentState.IsKeyDown(Keys.Up))
             {
                 avatar.MoveForward();
             }
 
-            if (keyboard.IsKeyDown(Keys.Down))
+            if (currentState.IsKeyDown(Keys.Down))
             {
                 avatar.MoveBackward();
             }
 
-            if (keyboard.IsKeyDown(Keys.Right))
+            if (currentState.IsKeyDown(Keys.Right))
             {
                 avatar.TurnRight();
             }
 
-            if (keyboard.IsKeyDown(Keys.Left))
+            if (currentState.IsKeyDown(Keys.Left))
             {
                 avatar.TurnLeft();
             }
 
-            if (keyboard.IsKeyDown(Keys.Space))
+            if (currentState.IsKeyDown(Keys.Space))
             {
                 avatar.Jump();
             }
 
+            if (currentState.IsKeyDown(Keys.I))
+            {
+                if (lastState != null && lastState != currentState)
+                {
+                    if (!inventory.Enabled)
+                    {
+                        inventory.Enabled = true;
+                        inventory.Visible = true;
+                    }
+                    else
+                    {
+                        inventory.Enabled = false;
+                        inventory.Visible = false;
+                    }
+                }
+            }
+
             camera.Target = avatar.Position;
             camera.Position = avatar.Position + Vector3.Transform(cameraOffset, avatar.Rotation);
+
+            lastState = currentState;
 
             base.Update(gameTime);
         }
