@@ -79,19 +79,26 @@ namespace Project_Fuzzy
 
         public void MoveForward()
         {
-            if(testBody.Normal != Vector3.Zero)
-                testBody.ApplyForce(facing * 1000f);
+            if (testBody.Normal != Vector3.Zero)
+            {
+                //Vector3 dir = new Vector3();
+                //Quaternion pitch = Quaternion.CreateFromAxisAngle(leftFacing, Vector3.Dot(Vector3.Up, testBody.Normal) * MathHelper.Pi);
+                //testBody.ApplyForce(facing * 1000f);
+                testBody.Velocity += facing * 100f;
+            }
         }
 
         public void MoveBackward()
         {
             if (testBody.Normal != Vector3.Zero)
-                testBody.ApplyForce(Vector3.Negate(facing * 1000f));
+                //testBody.ApplyForce(Vector3.Negate(facing * 1000f));
+                testBody.Velocity -= facing * 100f;
         }
 
         internal void Jump()
         {
-            testBody.ApplyForce(200f * testBody.Normal);
+            //testBody.ApplyForce(200f * testBody.Normal);
+            testBody.Velocity += 20f * testBody.Normal;
         }
     }
 }

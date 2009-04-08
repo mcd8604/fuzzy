@@ -69,42 +69,45 @@ namespace Project_Fuzzy
             foreach (PhysicsBody body in bodies)
             {
                 body.Normal = Vector3.Zero;
-                body.ApplyForce(gravity * body.Mass);
 
                 // check collisions
                 foreach (Triangle p in collidables)
                 {
                     if (p.Intersects(body.Bounds))
                     {
-                        if (body.Force.Length() > 0)
+                        if (body.Velocity.Length() > 0)
                         {
                             body.Normal += p.Normal;
                         }
                     }
                 }
-                // Apply Normal Force
+
+                // handle collision
                 if (body.Normal != Vector3.Zero)
                 {
                     body.Normal = Vector3.Normalize(body.Normal);
 
                     if (body.Velocity.Length() > 0)
                     {
-                        body.Velocity = Vector3.Dot(body.Normal, Vector3.Normalize(body.Velocity)) * friction * Vector3.Reflect(body.Velocity, body.Normal);
+                        body.Velocity += Math.Abs(Vector3.Dot(body.Normal, body.Velocity)) * body.Normal;
                     }
 
-                    float dot = Math.Abs(Vector3.Dot(body.Normal, body.Force ));
-                    float dotN = Vector3.Dot(body.Normal, Vector3.Normalize(body.Force));
-                    float dot2 = dotN * body.Force.Length();
+                    // apply gravity
+                    if (Vector3.Dot(Vector3.Up, body.Normal) <= 0f)
+                    {
+                        body.Velocity += (gravity);
+                    }
 
-                    //body.ApplyForce(Vector3.Dot(body.Normal, Vector3.Normalize(body.Force)) * body.Force.Length() * body.Normal);
-                    //body.ApplyForce(body.Force.Length() * body.Normal);
-                    body.ApplyForce(dot * body.Normal);
-                    //body.ApplyForce(Vector3.Negate(body.Force));
+                    // fake friction
+                    body.Velocity *= .5f;
                 }
-                body.Update(gameTime);
+                else
+                {
+                    // apply gravity
+                    body.Velocity += gravity;
+                }
 
-                // reset force
-                body.ResetForce();
+                body.Update(gameTime);
             }
 
             base.Update(gameTime);

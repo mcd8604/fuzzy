@@ -11,26 +11,33 @@ namespace Project_Fuzzy
         /// <summary>
         /// Mass (kg)
         /// </summary>
-        protected const float mass = 1f;
-        public float Mass
-        {
-            get { return mass; }
-        }
+        //protected const float mass = 1f;
+        //public float Mass
+        //{
+        //    get { return mass; }
+        //}
 
         /// <summary>
         /// Current net force
         /// </summary>
-        protected Vector3 force = Vector3.Zero;
+        //protected Vector3 force = Vector3.Zero;
 
-        public Vector3 Force
-        {
-            get { return force; }
-        }
+        //public Vector3 Force
+        //{
+        //    get { return force; }
+        //}
 
-        /// <summary>
-        /// Current acceleration
-        /// </summary>
-        protected Vector3 acceleration = Vector3.Zero;
+        ///// <summary>
+        ///// Current acceleration
+        ///// </summary>
+        //protected Vector3 acceleration = Vector3.Zero;
+        //public Vector3 Acceleration
+        //{
+        //    get { return acceleration; }
+        //    set { acceleration = value; }
+        //}
+
+        protected float maxSpeedSq = 25f;
 
         /// <summary>
         /// Current velocity
@@ -39,7 +46,13 @@ namespace Project_Fuzzy
         public Vector3 Velocity
         {
             get { return velocity; }
-            set { velocity = value; }
+            set 
+            {
+                if (value.LengthSquared() > maxSpeedSq)
+                    velocity = Vector3.Normalize(value) * maxSpeedSq;
+                else 
+                    velocity = value; 
+            }
         }
 
         /// <summary>
@@ -81,22 +94,22 @@ namespace Project_Fuzzy
 
             // Euler integration
 
-            acceleration = force / mass;
+            //acceleration = force / mass;
 
-            velocity += acceleration * dT;
+            //velocity += acceleration * dT;
 
             bounds.Center += velocity * dT;
         }
 
-        internal void ResetForce()
-        {
-            force = Vector3.Zero;
-        }
+        //internal void ResetForce()
+        //{
+        //    force = Vector3.Zero;
+        //}
 
-        public void ApplyForce(Vector3 force)
-        {
-            this.force += force;
-        }
+        //public void ApplyForce(Vector3 force)
+        //{
+        //    this.force += force;
+        //}
 
     }
 }
