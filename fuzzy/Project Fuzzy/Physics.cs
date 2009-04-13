@@ -70,44 +70,40 @@ namespace Project_Fuzzy
             {
                 body.Normal = Vector3.Zero;
 
-                // check collisions
+                // check collision     
+           
+                bool collision = false;
+                Vector3 offset = Vector3.Zero;
+                
                 foreach (Triangle p in collidables)
                 {
-                    if (p.Intersects(body.Bounds))
+                    float? dist = p.Intersects(body.Bounds);
+                    if (dist != null)
                     {
-                        if (body.Velocity.Length() > 0)
-                        {
-                            body.Normal += p.Normal;
-                        }
+                        collision = true;
+                        body.Normal += p.Normal;
+                        offset += p.Normal * (body.Bounds.Radius - (float)dist);
                     }
                 }
+
+                // prevent clipping
+                body.Position += offset;
+                
+                // apply gravity
+                body.Velocity += gravity;
 
                 // handle collision
-                if (body.Normal != Vector3.Zero)
+                if(collision)
                 {
                     body.Normal = Vector3.Normalize(body.Normal);
-
-                    if (body.Velocity.Length() > 0)
-                    {
-                        body.Velocity += Math.Abs(Vector3.Dot(body.Normal, body.Velocity)) * body.Normal;
-                    }
-
-                    // apply gravity
-                    if (Vector3.Dot(Vector3.Up, body.Normal) <= 0f)
-                    {
-                        body.Velocity += (gravity);
-                    }
-
-                    // fake friction
-                    body.Velocity *= .5f;
-                }
-                else
-                {
-                    // apply gravity
-                    body.Velocity += gravity;
+                    body.Velocity -= Vector3.Dot(body.Normal, body.Velocity) * body.Normal;
                 }
 
                 body.Update(gameTime);
+
+                // reset body
+                body.Velocity = Vector3.Zero;
+
             }
 
             base.Update(gameTime);

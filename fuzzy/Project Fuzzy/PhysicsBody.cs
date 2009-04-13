@@ -8,35 +8,6 @@ namespace Project_Fuzzy
 {
     class PhysicsBody
     {
-        /// <summary>
-        /// Mass (kg)
-        /// </summary>
-        //protected const float mass = 1f;
-        //public float Mass
-        //{
-        //    get { return mass; }
-        //}
-
-        /// <summary>
-        /// Current net force
-        /// </summary>
-        //protected Vector3 force = Vector3.Zero;
-
-        //public Vector3 Force
-        //{
-        //    get { return force; }
-        //}
-
-        ///// <summary>
-        ///// Current acceleration
-        ///// </summary>
-        //protected Vector3 acceleration = Vector3.Zero;
-        //public Vector3 Acceleration
-        //{
-        //    get { return acceleration; }
-        //    set { acceleration = value; }
-        //}
-
         protected float maxSpeedSq = 25f;
 
         /// <summary>
@@ -52,6 +23,19 @@ namespace Project_Fuzzy
                     velocity = Vector3.Normalize(value) * maxSpeedSq;
                 else 
                     velocity = value; 
+            }
+        }
+        
+        /// <summary>
+        /// Applied acceleration
+        /// </summary>
+        protected Vector3 accel = Vector3.Zero;
+        public Vector3 Accel
+        {
+            get { return accel; }
+            set
+            {
+                accel = value;
             }
         }
 
@@ -92,24 +76,10 @@ namespace Project_Fuzzy
         {
             float dT = (float)time.ElapsedGameTime.TotalSeconds;
 
-            // Euler integration
-
-            //acceleration = force / mass;
-
-            //velocity += acceleration * dT;
+            velocity += accel * dT;
 
             bounds.Center += velocity * dT;
         }
-
-        //internal void ResetForce()
-        //{
-        //    force = Vector3.Zero;
-        //}
-
-        //public void ApplyForce(Vector3 force)
-        //{
-        //    this.force += force;
-        //}
 
     }
 }

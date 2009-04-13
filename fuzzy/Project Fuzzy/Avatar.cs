@@ -81,9 +81,6 @@ namespace Project_Fuzzy
         {
             if (testBody.Normal != Vector3.Zero)
             {
-                //Vector3 dir = new Vector3();
-                //Quaternion pitch = Quaternion.CreateFromAxisAngle(leftFacing, Vector3.Dot(Vector3.Up, testBody.Normal) * MathHelper.Pi);
-                //testBody.ApplyForce(facing * 1000f);
                 testBody.Velocity += facing * 100f;
             }
         }
@@ -91,14 +88,12 @@ namespace Project_Fuzzy
         public void MoveBackward()
         {
             if (testBody.Normal != Vector3.Zero)
-                //testBody.ApplyForce(Vector3.Negate(facing * 1000f));
                 testBody.Velocity -= facing * 100f;
         }
 
         internal void Jump()
         {
-            //testBody.ApplyForce(200f * testBody.Normal);
-            testBody.Velocity += 20f * testBody.Normal;
+            //testBody.Accel += 20f * testBody.Normal;
         }
     }
 }

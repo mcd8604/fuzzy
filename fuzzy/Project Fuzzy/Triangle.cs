@@ -58,19 +58,19 @@ namespace Project_Fuzzy
             ray31 = new Ray(v3, v1 - v3);
         }
 
-        public bool Intersects(BoundingSphere sphere)
+        public float? Intersects(BoundingSphere sphere)
         {
             // First, check for planar intersection
             if (sphere.Intersects(p) != PlaneIntersectionType.Intersecting)
-                return false;
+                return null;
 
             // Exit if the sphere is disjoint with the bounds of the triangle
             if (sphere.Intersects(boundPlane12) == PlaneIntersectionType.Back)
-                return false;
+                return null;
             if (sphere.Intersects(boundPlane23) == PlaneIntersectionType.Back)
-                return false;
+                return null;
             if (sphere.Intersects(boundPlane31) == PlaneIntersectionType.Back)
-                return false;
+                return null;
 
             // Test if the center of the sphere is past the bounds of the triangle
 
@@ -85,8 +85,8 @@ namespace Project_Fuzzy
                 // Exit if the distance from the center to the triangle edge > radius
 
                 if (Vector3.Distance(sphere.Center, projPt) > sphere.Radius)
-                    return false;
-                
+                    return null;
+
             }
 
             if (sphere.Intersects(boundPlane23) == PlaneIntersectionType.Intersecting &&
@@ -96,9 +96,9 @@ namespace Project_Fuzzy
                 Vector3 projPt = Vector3.Lerp(v2, v3, Vector3.Dot(v2 - sphere.Center, edge) / edge.LengthSquared());
 
                 if (Vector3.Distance(sphere.Center, projPt) > sphere.Radius)
-                    return false;
+                    return null;
             }
-            
+
             if (sphere.Intersects(boundPlane23) == PlaneIntersectionType.Intersecting &&
                 boundPlane31.DotCoordinate(sphere.Center) < 0)
             {
@@ -106,10 +106,11 @@ namespace Project_Fuzzy
                 Vector3 projPt = Vector3.Lerp(v3, v1, Vector3.Dot(v3 - sphere.Center, edge) / edge.LengthSquared());
 
                 if (Vector3.Distance(sphere.Center, projPt) > sphere.Radius)
-                    return false;
+                    return null;
             }
-            
-            return true;
+
+            // return distance from bound center to plane
+            return p.DotCoordinate(sphere.Center);
         }
     }
 }
