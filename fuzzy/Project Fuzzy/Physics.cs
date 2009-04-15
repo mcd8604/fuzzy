@@ -68,42 +68,8 @@ namespace Project_Fuzzy
         {
             foreach (PhysicsBody body in bodies)
             {
-                body.Normal = Vector3.Zero;
-
-                // check collision     
-           
-                bool collision = false;
-                Vector3 offset = Vector3.Zero;
-                
-                foreach (Triangle p in collidables)
-                {
-                    float? dist = p.Intersects(body.Bounds);
-                    if (dist != null)
-                    {
-                        collision = true;
-                        body.Normal += p.Normal;
-                        offset += p.Normal * (body.Bounds.Radius - (float)dist);
-                    }
-                }
-
-                // prevent clipping
-                body.Position += offset;
-                
-                // apply gravity
                 body.Velocity += gravity;
-
-                // handle collision
-                if(collision)
-                {
-                    body.Normal = Vector3.Normalize(body.Normal);
-                    body.Velocity -= Vector3.Dot(body.Normal, body.Velocity) * body.Normal;
-                }
-
-                body.Update(gameTime);
-
-                // reset body
-                body.Velocity = Vector3.Zero;
-
+                body.Update((float)gameTime.ElapsedGameTime.TotalSeconds, collidables);
             }
 
             base.Update(gameTime);

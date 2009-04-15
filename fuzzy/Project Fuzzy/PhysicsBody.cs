@@ -25,6 +25,8 @@ namespace Project_Fuzzy
                     velocity = value; 
             }
         }
+
+        protected Vector3 lastVelocity = Vector3.Zero;
         
         /// <summary>
         /// Applied acceleration
@@ -72,13 +74,37 @@ namespace Project_Fuzzy
             set { collisionNormal = value; }
         }
 
-        public void Update(GameTime time)
+        public void Update(float dT, List<Triangle> collidables)
         {
-            float dT = (float)time.ElapsedGameTime.TotalSeconds;
+            collisionNormal = Vector3.Zero;
+            bounds.Center += lastVelocity * dT;
 
-            velocity += accel * dT;
+            // check collision     
+            bool collision = false;
 
-            bounds.Center += velocity * dT;
+            foreach (Triangle p in collidables)
+            {
+                float? dist = p.Intersects(bounds);
+                if (dist != null)
+                {
+                    // handle collision
+                    collision = true;
+                    collisionNormal += p.Normal;
+                    bounds.Center += p.Normal * (bounds.Radius - (float)dist);
+                    velocity -= Vector3.Dot(p.Normal, velocity) * p.Normal;
+                }
+            }
+
+            if (collision)
+            {
+                collisionNormal = Vector3.Normalize(collisionNormal);
+            }
+
+            //velocity += accel * dT;
+            
+            // reset velocity
+            lastVelocity = velocity;
+            velocity = Vector3.Zero;
         }
 
     }
