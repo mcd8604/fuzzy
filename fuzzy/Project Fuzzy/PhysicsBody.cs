@@ -63,46 +63,49 @@ namespace Project_Fuzzy
             get { return bounds; }
         }
 
-        protected Vector3 collisionNormal = Vector3.Zero;
-
-        /// <summary>
-        /// Average of collision surface normals
-        /// </summary>
-        public Vector3 Normal
+        protected bool isColliding = false;
+        public bool IsColliding
         {
-            get { return collisionNormal; }
-            set { collisionNormal = value; }
+            get { return isColliding; }
         }
 
-        public void Update(float dT, List<Triangle> collidables)
+        public void Update(float dT, List<Triangle> collidables, Vector3 gravity)
         {
-            collisionNormal = Vector3.Zero;
             bounds.Center += lastVelocity * dT;
 
-            // check collision     
-            bool collision = false;
+            // check collisions
+            Vector3 clipOffset = Vector3.Zero;
+            int numCollisions = 0;
 
             foreach (Triangle p in collidables)
             {
                 float? dist = p.Intersects(bounds);
-                if (dist != null)
+                if (dist != null && dist >= 0)
                 {
                     // handle collision
-                    collision = true;
-                    collisionNormal += p.Normal;
-                    bounds.Center += p.Normal * (bounds.Radius - (float)dist);
-                    velocity -= Vector3.Dot(p.Normal, velocity) * p.Normal;
+                    ++numCollisions;
+                    float dot = Vector3.Dot(p.Normal, velocity);
+                    if (dot < 0)
+                    {
+                        clipOffset += p.Normal * (bounds.Radius - (float)dist);
+                        velocity -= dot * p.Normal;
+                    }
                 }
             }
 
-            if (collision)
+            if (numCollisions > 0)
             {
-                collisionNormal = Vector3.Normalize(collisionNormal);
+                isColliding = true;
+                bounds.Center += clipOffset / numCollisions;
+            }
+            else
+            {
+                isColliding = false;
+                velocity += gravity;
             }
 
-            //velocity += accel * dT;
-            
-            // reset velocity
+            velocity += accel * dT;
+
             lastVelocity = velocity;
             velocity = Vector3.Zero;
         }

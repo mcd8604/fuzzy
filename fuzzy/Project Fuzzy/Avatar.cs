@@ -79,7 +79,7 @@ namespace Project_Fuzzy
 
         public void MoveForward()
         {
-            if (testBody.Normal != Vector3.Zero)
+            if (testBody.IsColliding)
             {
                 testBody.Velocity += facing * 100f;
             }
@@ -87,13 +87,14 @@ namespace Project_Fuzzy
 
         public void MoveBackward()
         {
-            if (testBody.Normal != Vector3.Zero)
+            if (testBody.IsColliding)
                 testBody.Velocity -= facing * 100f;
         }
 
         internal void Jump()
         {
-            //testBody.Accel += 20f * testBody.Normal;
+            if (testBody.IsColliding)
+                testBody.Accel += 20f * Vector3.Up;
         }
     }
 }

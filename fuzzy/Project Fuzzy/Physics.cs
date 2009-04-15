@@ -56,20 +56,11 @@ namespace Project_Fuzzy
             vertexArray = vertices.ToArray();
         }
 
-        public void AddCollidables(List<BoundingBox> boxes)
-        {
-            //collidables.AddRange(boxes);
-            
-            //vertexArray = vertices.ToArray();
-        }
-
-
         public override void Update(GameTime gameTime)
         {
             foreach (PhysicsBody body in bodies)
             {
-                body.Velocity += gravity;
-                body.Update((float)gameTime.ElapsedGameTime.TotalSeconds, collidables);
+                body.Update((float)gameTime.ElapsedGameTime.TotalSeconds, collidables, gravity);
             }
 
             base.Update(gameTime);

@@ -1,6 +1,6 @@
 #undef FLOOR_TEST
-#undef DRAW_COLLIDABLES
-#undef WIREFRAME
+#define DRAW_COLLIDABLES
+#define WIREFRAME
 
 using System;
 using System.Collections.Generic;
