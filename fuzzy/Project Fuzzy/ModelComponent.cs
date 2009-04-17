@@ -11,9 +11,7 @@ namespace Project_Fuzzy
     {
 
         private string modelName;
-        private string textureName;
         protected Model model;
-        protected Texture2D texture;
 
         protected Effect effect;
         public Effect ModelEffect
@@ -61,21 +59,11 @@ namespace Project_Fuzzy
             this.modelName = modelName;
         }
 
-        public ModelComponent(Game game, String modelName, String textureName)
-            : base(game)
-        {
-            this.modelName = modelName;
-            this.textureName = textureName;
-        }
-
         protected override void LoadContent()
         {
             model = Game.Content.Load<Model>(modelName);
             
             GenerateBoundingSphere();
-
-            if(!string.IsNullOrEmpty(textureName))
-                texture = Game.Content.Load<Texture2D>(textureName);
             
             base.LoadContent();
         }
@@ -98,6 +86,9 @@ namespace Project_Fuzzy
             {
                 VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[mesh.VertexBuffer.SizeInBytes / mesh.MeshParts[0].VertexStride];
                 mesh.VertexBuffer.GetData<VertexPositionNormalTexture>(vertices);
+
+                if (modelName == "courtyard")
+                { }
 
                 if (mesh.IndexBuffer.IndexElementSize == IndexElementSize.SixteenBits) 
                 {
@@ -156,7 +147,6 @@ namespace Project_Fuzzy
         public override void Draw(GameTime gameTime)
         {
             effect.Parameters["World"].SetValue(getTransform());
-            effect.Parameters["BasicTexture"].SetValue(texture);
 
             foreach (ModelMesh mesh in model.Meshes)
             {

@@ -93,8 +93,8 @@ namespace Project_Fuzzy
 
         internal void Jump()
         {
-            if (testBody.IsColliding)
-                testBody.Accel += 20f * Vector3.Up;
+            //if (testBody.IsColliding)
+                //testBody.Accel += 20f * Vector3.Up;
         }
     }
 }
