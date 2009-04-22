@@ -44,7 +44,7 @@ namespace Project_Fuzzy.Inventory
             spriteBatch = new SpriteBatch(this.Game.GraphicsDevice);
             textureList = new List<Texture2D>();
 
-            //textureList.Add(this.Game.Content.Load<Texture2D>(@"test"));
+            textureList.Add(this.Game.Content.Load<Texture2D>(@"inventory"));
             //Add Images
            
 
@@ -57,7 +57,7 @@ namespace Project_Fuzzy.Inventory
 
             foreach (Texture2D image in textureList)
             {
-                spriteBatch.Draw(image, new Vector2(0, 0), Color.White);
+                spriteBatch.Draw(image, new Vector2(500, 300), Color.White);
             }
             spriteBatch.End();
             base.Draw(gameTime);
