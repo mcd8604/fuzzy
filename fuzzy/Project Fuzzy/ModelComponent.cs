@@ -147,7 +147,6 @@ namespace Project_Fuzzy
         public override void Draw(GameTime gameTime)
         {
             effect.Parameters["World"].SetValue(getTransform());
-
             foreach (ModelMesh mesh in model.Meshes)
             {
                 mesh.Draw();
