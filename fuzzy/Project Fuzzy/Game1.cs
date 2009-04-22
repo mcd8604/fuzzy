@@ -37,7 +37,7 @@ namespace Project_Fuzzy
 
         BasicEffect effect;
         Avatar avatar;
-        ModelComponent sphere1;
+        InteractiveComponent sphere1;
         ModelComponent sphere2;
         ModelComponent sphere3;
         ModelComponent sphere4;        
@@ -83,9 +83,9 @@ namespace Project_Fuzzy
             avatar.Position = new Vector3(-25, 10, 0);
             Components.Add(avatar);
 
-            sphere1 = new ModelComponent(this, "sphere");
+            sphere1 = new InteractiveComponent(this, "sphere", true, this.Content.Load<Texture2D>(@"ball"));
             sphere1.DrawOrder = 1;
-            sphere1.Position = new Vector3(10, 5, 10);
+            sphere1.Position = new Vector3(10, 2, 10);
             Components.Add(sphere1);
 
             sphere2 = new ModelComponent(this, "sphere");
@@ -233,7 +233,21 @@ namespace Project_Fuzzy
         protected override void Update(GameTime gameTime)
         {
             KeyboardState currentState = Keyboard.GetState();
-            
+
+
+            if (currentState.IsKeyDown(Keys.Enter))
+            {
+                if (lastState != null && lastState != currentState)
+                {
+
+                    if (sphere1.inRange(avatar.Position))
+                    {
+                        inventory.addItem(sphere1.ModelTextureForInventory, sphere1.ModelName);
+                        sphere1.Visible = false;
+                        Console.WriteLine("ADDED");
+                    }
+                }
+            }
 
             if (currentState.IsKeyDown(Keys.Escape))
             {

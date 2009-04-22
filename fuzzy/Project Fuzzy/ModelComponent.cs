@@ -53,7 +53,7 @@ namespace Project_Fuzzy
             get { return bounds; }
         }
 
-        public ModelComponent(Game game, String modelName)
+        public ModelComponent(Game game, string modelName)
             : base(game)
         {
             this.modelName = modelName;

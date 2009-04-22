@@ -20,7 +20,7 @@ namespace Project_Fuzzy.Inventory
     public class GUIInventory : Microsoft.Xna.Framework.DrawableGameComponent
     {
         SpriteBatch spriteBatch;
-        List<Texture2D> textureList;
+        List<Item> itemList;
 
         public GUIInventory(Game game)
             : base(game)
@@ -42,9 +42,11 @@ namespace Project_Fuzzy.Inventory
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(this.Game.GraphicsDevice);
-            textureList = new List<Texture2D>();
+            itemList = new List<Item>();
 
-            textureList.Add(this.Game.Content.Load<Texture2D>(@"inventory"));
+            itemList.Add(new Item(this.Game.Content.Load<Texture2D>(@"inventory"), "inventory"));
+
+            //itemList.Add(this.Game.Content.Load<Texture2D>(@"inventory"));
             //Add Images
            
 
@@ -55,9 +57,9 @@ namespace Project_Fuzzy.Inventory
         {
             spriteBatch.Begin();
 
-            foreach (Texture2D image in textureList)
+            foreach (Item image in itemList)
             {
-                spriteBatch.Draw(image, new Vector2(500, 300), Color.White);
+                spriteBatch.Draw(image.UIImage, new Vector2(500, 300), Color.White);
             }
             spriteBatch.End();
             base.Draw(gameTime);
@@ -72,6 +74,43 @@ namespace Project_Fuzzy.Inventory
             // TODO: Add your update code here
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// Adds the item to the inventory list
+        /// </summary>
+        /// <param name="name2D"></param>
+        /// <param name="name"></param>
+        public void addItem(Texture2D name2D, string name)
+        {
+            Item temp = new Item(name2D, name);
+
+            int yOffset = itemList.Count / 4;
+            int xOffset = itemList.Count % 4;
+
+            temp.Position = new Vector2((xOffset * 60), yOffset * 60);
+            itemList.Add(temp);
+
+        }
+
+        /// <summary>
+        /// Removes the item from the array with a certain name
+        /// </summary>
+        /// <param name="name"></param>
+        public void removeItem(string name)
+        {
+            int index = 0;
+
+            foreach(Item image in itemList)
+            {
+                if (image.Name == name)
+                {
+                    itemList.RemoveAt(index);
+                    break;
+                }
+                
+            }
+
         }
     }
 }
