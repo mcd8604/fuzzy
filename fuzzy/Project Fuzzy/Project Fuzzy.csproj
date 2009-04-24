@@ -82,6 +82,8 @@
   <ItemGroup>
     <Compile Include="Avatar.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="CustomModel.cs" />
+    <Compile Include="CustomModelReader.cs" />
     <Compile Include="InteractiveComponent.cs" />
     <Compile Include="Inventory\GUIInventory.cs" />
     <Compile Include="Inventory\Item.cs" />

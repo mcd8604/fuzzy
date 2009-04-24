@@ -70,12 +70,12 @@
     <Compile Include="courtyard.fbx">
       <Name>courtyard</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>CustomModelProcessor</Processor>
     </Compile>
     <Compile Include="sphere.fbx">
       <Name>sphere</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>CustomModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -89,7 +89,7 @@
     <Compile Include="test.fbx">
       <Name>test</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>CustomModelProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -100,7 +100,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ball.png">
+    <ProjectReference Include="..\..\CustomModelPipeline\CustomModelPipeline.csproj">
+      <Project>{8C4AEEAC-D4C6-4C94-BB37-E1904945769D}</Project>
+      <Name>CustomModelPipeline</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ball.bmp">
       <Name>ball</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>

@@ -11,7 +11,7 @@ namespace Project_Fuzzy
     {
 
         private string modelName;
-        protected Model model;
+        protected CustomModel model;
 
         protected Effect effect;
         public Effect ModelEffect
@@ -21,9 +21,11 @@ namespace Project_Fuzzy
                 effect = value;
                 if (model != null)
                 {
-                    foreach (ModelMesh mesh in model.Meshes)
-                        foreach (ModelMeshPart part in mesh.MeshParts)
-                            part.Effect = effect;
+                    foreach (ModelPart part in model.ModelParts)
+                        part.Effect = effect;
+                    //foreach (ModelMesh mesh in model.Meshes)
+                    //    foreach (ModelMeshPart part in mesh.MeshParts)
+                    //        part.Effect = effect;
                 }
             }
 
@@ -61,7 +63,7 @@ namespace Project_Fuzzy
 
         protected override void LoadContent()
         {
-            model = Game.Content.Load<Model>(modelName);
+            model = Game.Content.Load<CustomModel>(modelName);
             
             GenerateBoundingSphere();
             
@@ -72,9 +74,9 @@ namespace Project_Fuzzy
         {
             bounds = new BoundingSphere();
 
-            foreach (ModelMesh mesh in model.Meshes)
+            foreach (ModelPart part in model.ModelParts)
             {
-                bounds = BoundingSphere.CreateMerged(bounds, mesh.BoundingSphere);
+                bounds = BoundingSphere.CreateMerged(bounds, part.BoundingSphere);
             }
         }
 
@@ -82,19 +84,19 @@ namespace Project_Fuzzy
         {
             List<Triangle> planes = new List<Triangle>();
 
-            foreach (ModelMesh mesh in model.Meshes)
+            foreach (ModelPart part in model.ModelParts)
             {
-                VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[mesh.VertexBuffer.SizeInBytes / mesh.MeshParts[0].VertexStride];
-                mesh.VertexBuffer.GetData<VertexPositionNormalTexture>(vertices);
+                VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[part.VertexBuffer.SizeInBytes / part.VertexStride];
+                part.VertexBuffer.GetData<VertexPositionNormalTexture>(vertices);
 
                 if (modelName == "courtyard")
                 { }
 
-                if (mesh.IndexBuffer.IndexElementSize == IndexElementSize.SixteenBits) 
+                if (part.IndexBuffer.IndexElementSize == IndexElementSize.SixteenBits) 
                 {
-                    Int16[] indices = new Int16[mesh.IndexBuffer.SizeInBytes >> 1];
+                    Int16[] indices = new Int16[part.IndexBuffer.SizeInBytes >> 1];
                     
-                    mesh.IndexBuffer.GetData<Int16>(indices);
+                    part.IndexBuffer.GetData<Int16>(indices);
 
                     for(int i = 0; i < indices.Length; i += 3)
                     {
@@ -108,17 +110,17 @@ namespace Project_Fuzzy
                         {
                             Console.WriteLine("Redundant vertices found!");
                             Console.WriteLine("\tModel: " + modelName);
-                            Console.WriteLine("\tMesh: " + mesh.Name);
+                            //Console.WriteLine("\tMesh: " + part.Name);
                             Console.WriteLine("\tVertex 1: " + vertices[indices[i]].Position);
                             Console.WriteLine("\tVertex 2: " + vertices[indices[i + 1]].Position);
                             Console.WriteLine("\tVertex 3: " + vertices[indices[i + 2]].Position);
                         }
                     }
                 }
-                else if (mesh.IndexBuffer.IndexElementSize == IndexElementSize.ThirtyTwoBits)
+                else if (part.IndexBuffer.IndexElementSize == IndexElementSize.ThirtyTwoBits)
                 {
-                    Int32[] indices = new Int32[mesh.IndexBuffer.SizeInBytes >> 2];
-                    mesh.IndexBuffer.GetData<Int32>(indices);
+                    Int32[] indices = new Int32[part.IndexBuffer.SizeInBytes >> 2];
+                    part.IndexBuffer.GetData<Int32>(indices);
 
                     for(int i = 0; i < indices.Length; i += 3)
                     {
@@ -132,28 +134,18 @@ namespace Project_Fuzzy
             return planes;
         }
 
-        public List<BoundingBox> GetBoundingBoxes()
-        {
-            List<BoundingBox> boxes = new List<BoundingBox>();
-
-            foreach (ModelMesh mesh in model.Meshes)
-            {
-                boxes.Add(BoundingBox.CreateFromSphere(mesh.BoundingSphere));
-            }
-
-            return boxes;
-        }
-
         public override void Draw(GameTime gameTime)
         {
-            effect.Parameters["World"].SetValue(getTransform());
-            foreach (ModelMesh mesh in model.Meshes)
-            {
-                mesh.Draw();
-            }
-            base.Draw(gameTime);
+            model.Draw(getTransform());
+            //effect.Parameters["World"].SetValue(getTransform());
+            //foreach (ModelPart part in model.ModelParts)
+            //{
+            //    GraphicsDevice.Vertices[0].SetSource(part.VertexBuffer, 0, part.VertexStride);
+            //    GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, part.VertexCount, 0, part.TriangleCount);
+            //}
+            //base.Draw(gameTime);
 
-            effect.Parameters["World"].SetValue(Matrix.Identity);
+            //effect.Parameters["World"].SetValue(Matrix.Identity);
         }
 
         private Matrix getTransform()
