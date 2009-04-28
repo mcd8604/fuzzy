@@ -12,14 +12,23 @@ namespace Project_Fuzzy
         private const float RANGE = 10;
         private bool isObtainable;
         private string modelName;
+        private string textureName;
         private Texture2D modelTextureForInventory;
 
-
-        public InteractiveComponent(Game game, string name, bool obtainable, Texture2D textForModel):base(game, name)
+        public InteractiveComponent(Game game, string name, bool obtainable, string textureName)
+            : base(game, name)
         {
             modelName = name;
             isObtainable = obtainable;
-            modelTextureForInventory = textForModel;
+            this.textureName = textureName;
+        }
+
+        protected override void LoadContent()
+        {
+            if (!String.IsNullOrEmpty(textureName))
+                modelTextureForInventory = Game.Content.Load<Texture2D>(textureName);
+
+            base.LoadContent();
         }
 
         public bool inRange(Vector3 ballPosition)

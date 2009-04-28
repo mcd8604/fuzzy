@@ -69,7 +69,7 @@ namespace Project_Fuzzy
             get { return isColliding; }
         }
 
-        public void Update(float dT, List<Triangle> collidables, Vector3 gravity)
+        public void Update(float dT, List<CustomModel> collidables, Vector3 gravity)
         {
             bounds.Center += lastVelocity * dT;
 
@@ -77,18 +77,28 @@ namespace Project_Fuzzy
             Vector3 clipOffset = Vector3.Zero;
             int numCollisions = 0;
 
-            foreach (Triangle p in collidables)
+            foreach(CustomModel model in collidables)
+            //foreach (Triangle p in collidables)
             {
-                float? dist = p.Intersects(bounds);
-                if (dist != null && dist >= 0)
+                foreach(ModelPart part in model.ModelParts) 
                 {
-                    // handle collision
-                    ++numCollisions;
-                    float dot = Vector3.Dot(p.Normal, velocity);
-                    if (dot < 0)
+                    if (part.Collidable)
                     {
-                        clipOffset += p.Normal * (bounds.Radius - (float)dist);
-                        velocity -= dot * p.Normal;
+                        foreach (Triangle p in part.CollisionTriangles)
+                        {
+                            float? dist = p.Intersects(bounds);
+                            if (dist != null && dist >= 0)
+                            {
+                                // handle collision
+                                ++numCollisions;
+                                float dot = Vector3.Dot(p.Normal, velocity);
+                                if (dot < 0)
+                                {
+                                    clipOffset += p.Normal * (bounds.Radius - (float)dist);
+                                    velocity -= dot * p.Normal;
+                                }
+                            }
+                        }
                     }
                 }
             }

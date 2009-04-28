@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace Project_Fuzzy
 {
-    class Triangle
+    public class Triangle
     {
         protected Plane p;
 

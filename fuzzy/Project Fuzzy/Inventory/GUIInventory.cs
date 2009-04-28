@@ -44,7 +44,7 @@ namespace Project_Fuzzy.Inventory
             spriteBatch = new SpriteBatch(this.Game.GraphicsDevice);
             itemList = new List<Item>();
 
-            itemList.Add(new Item(this.Game.Content.Load<Texture2D>(@"inventory"), "inventory"));
+            //itemList.Add(new Item(this.Game.Content.Load<Texture2D>(@"inventory"), "inventory"));
 
             //itemList.Add(this.Game.Content.Load<Texture2D>(@"inventory"));
             //Add Images

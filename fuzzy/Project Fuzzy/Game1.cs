@@ -83,7 +83,7 @@ namespace Project_Fuzzy
             avatar.Position = new Vector3(-25, 10, 0);
             Components.Add(avatar);
 
-            sphere1 = new InteractiveComponent(this, "sphere", true, this.Content.Load<Texture2D>(@"ball"));
+            sphere1 = new InteractiveComponent(this, "sphere", true, @"");
             sphere1.DrawOrder = 1;
             sphere1.Position = new Vector3(10, 2, 10);
             Components.Add(sphere1);
@@ -137,8 +137,8 @@ namespace Project_Fuzzy
             floorVertices[4] = new VertexPositionNormalTexture(new Vector3(-50, 0, -50), Vector3.Up, Vector2.Zero);
             floorVertices[5] = new VertexPositionNormalTexture(new Vector3(50, 0, -50), Vector3.Up, new Vector2(1f, 0f));
 
-            physics.AddCollidable(new Triangle(floorVertices[0].Position, floorVertices[1].Position, floorVertices[2].Position));
-            physics.AddCollidable(new Triangle(floorVertices[3].Position, floorVertices[4].Position, floorVertices[5].Position));
+            //physics.AddCollidable(new Triangle(floorVertices[0].Position, floorVertices[1].Position, floorVertices[2].Position));
+            //physics.AddCollidable(new Triangle(floorVertices[3].Position, floorVertices[4].Position, floorVertices[5].Position));
         }
 #endif
 
@@ -178,7 +178,7 @@ namespace Project_Fuzzy
 #if DRAW_COLLIDABLES
             courtyard.Visible = false;
 #endif
-            physics.AddCollidables(courtyard.GetPlanes());
+            physics.AddModel(courtyard.Model);
 #endif
             InitializeTransform();
         }
@@ -363,18 +363,18 @@ namespace Project_Fuzzy
 #if DRAW_COLLIDABLES
         private void DrawCollidables()
         {
-            if (physics.Vertices.Length > 0)
-            {
-                effect.Parameters["BasicTexture"].SetValue(texture);
-                effect.Begin();
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-                {
-                    pass.Begin();
-                    GraphicsDevice.DrawUserPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, physics.Vertices, 0, physics.Vertices.Length / 3);
-                    pass.End();
-                }
-                effect.End();
-            }
+            //if (physics.Vertices.Length > 0)
+            //{
+            //    effect.Parameters["BasicTexture"].SetValue(texture);
+            //    effect.Begin();
+            //    foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            //    {
+            //        pass.Begin();
+            //        GraphicsDevice.DrawUserPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, physics.Vertices, 0, physics.Vertices.Length / 3);
+            //        pass.End();
+            //    }
+            //    effect.End();
+            //}
         }
 #endif
     }
