@@ -37,15 +37,9 @@ namespace Project_Fuzzy.Inventory
             // TODO: Add your initialization code here
             itemList = new List<Item>();
                 
-            AddItem(new Item(this.Game, @"inventory", "inventory"));
+            addItem(@"inventory", "inventory");
 
             base.Initialize();
-        }
-
-        public void AddItem(Item item)
-        {
-            itemList.Add(item);
-            this.Game.Components.Add(item);
         }
 
         protected override void LoadContent()
@@ -85,13 +79,16 @@ namespace Project_Fuzzy.Inventory
         /// <param name="name"></param>
         public void addItem(string name2D, string name)
         {
-            Item temp = new Item(this.Game, name2D, name);
+            Item item = new Item(this.Game, name2D, name);
 
             int yOffset = itemList.Count / 4;
             int xOffset = itemList.Count % 4;
 
-            temp.Position = new Vector2((xOffset * 60), yOffset * 60);
-            AddItem(temp);
+            item.Position = new Vector2((xOffset * 60), yOffset * 60);
+            item.DrawOrder = this.DrawOrder + itemList.Count;
+
+            itemList.Add(item);
+            this.Game.Components.Add(item);
 
         }
 
