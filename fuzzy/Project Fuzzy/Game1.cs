@@ -118,7 +118,7 @@ namespace Project_Fuzzy
             inventory = new GUIInventory(this);
             inventory.Visible = false;
             inventory.Enabled = false;
-            inventory.DrawOrder = 5;
+            inventory.DrawOrder = 2;
             Components.Add(inventory);
 
             base.Initialize();
@@ -334,7 +334,6 @@ namespace Project_Fuzzy
 
             // TODO: Add your drawing code here      
             
-            base.Draw(gameTime);
 
 #if FLOOR_TEST
             DrawFloor();
@@ -343,6 +342,7 @@ namespace Project_Fuzzy
 #if DRAW_COLLIDABLES
             DrawCollidables();
 #endif
+            base.Draw(gameTime);
         }
 
 #if FLOOR_TEST
