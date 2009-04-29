@@ -17,7 +17,7 @@ namespace Project_Fuzzy.Inventory
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class GUIInventory : Microsoft.Xna.Framework.DrawableGameComponent
+    public class GUIInventory : DrawableGameComponent
     {
         SpriteBatch spriteBatch;
         List<Item> itemList;
@@ -35,20 +35,22 @@ namespace Project_Fuzzy.Inventory
         public override void Initialize()
         {
             // TODO: Add your initialization code here
+            itemList = new List<Item>();
+                
+            AddItem(new Item(this.Game, @"inventory", "inventory"));
 
             base.Initialize();
         }
 
+        public void AddItem(Item item)
+        {
+            itemList.Add(item);
+            this.Game.Components.Add(item);
+        }
+
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(this.Game.GraphicsDevice);
-            itemList = new List<Item>();
-
-            //itemList.Add(new Item(this.Game.Content.Load<Texture2D>(@"inventory"), "inventory"));
-
-            //itemList.Add(this.Game.Content.Load<Texture2D>(@"inventory"));
-            //Add Images
-           
+            spriteBatch = new SpriteBatch(this.Game.GraphicsDevice); 
 
             base.LoadContent();
         }
@@ -81,15 +83,15 @@ namespace Project_Fuzzy.Inventory
         /// </summary>
         /// <param name="name2D"></param>
         /// <param name="name"></param>
-        public void addItem(Texture2D name2D, string name)
+        public void addItem(string name2D, string name)
         {
-            Item temp = new Item(name2D, name);
+            Item temp = new Item(this.Game, name2D, name);
 
             int yOffset = itemList.Count / 4;
             int xOffset = itemList.Count % 4;
 
             temp.Position = new Vector2((xOffset * 60), yOffset * 60);
-            itemList.Add(temp);
+            AddItem(temp);
 
         }
 

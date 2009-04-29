@@ -6,14 +6,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Project_Fuzzy
 {
-    class InteractiveComponent : ModelComponent
+    public class InteractiveComponent : ModelComponent
     {
 
         private const float RANGE = 10;
         private bool isObtainable;
         private string modelName;
         private string textureName;
-        private Texture2D modelTextureForInventory;
+
+        public string TextureName
+        {
+            get { return textureName; }
+        }
 
         public InteractiveComponent(Game game, string name, bool obtainable, string textureName)
             : base(game, name)
@@ -21,14 +25,6 @@ namespace Project_Fuzzy
             modelName = name;
             isObtainable = obtainable;
             this.textureName = textureName;
-        }
-
-        protected override void LoadContent()
-        {
-            if (!String.IsNullOrEmpty(textureName))
-                modelTextureForInventory = Game.Content.Load<Texture2D>(textureName);
-
-            base.LoadContent();
         }
 
         public bool inRange(Vector3 ballPosition)
@@ -54,13 +50,6 @@ namespace Project_Fuzzy
         {
             get { return modelName; }
             set { modelName = value; }
-
-        }
-
-        public Texture2D ModelTextureForInventory
-        {
-            get { return modelTextureForInventory; }
-            set { modelTextureForInventory = value; }
 
         }
 

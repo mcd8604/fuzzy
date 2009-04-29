@@ -19,6 +19,10 @@ namespace Project_Fuzzy
         protected List<PhysicsBody> bodies = new List<PhysicsBody>();
 
         protected List<CustomModel> collidables = new List<CustomModel>();
+        public List<CustomModel> Collidables
+        {
+            get { return collidables; }
+        }
 
         public Physics(Game game)
             : base(game) { }

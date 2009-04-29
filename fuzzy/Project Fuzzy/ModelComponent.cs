@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Project_Fuzzy
 {
-    class ModelComponent : DrawableGameComponent
+    public class ModelComponent : DrawableGameComponent
     {
 
         private string modelName;

@@ -6,10 +6,11 @@ using Microsoft.Xna.Framework;
 
 namespace Project_Fuzzy.Inventory
 {
-    class Item
+    public class Item : DrawableGameComponent
     {
         //protected ModelComponent model;
 
+        protected string imageName;
         protected Texture2D uiImage;
 
         protected string name;
@@ -19,10 +20,18 @@ namespace Project_Fuzzy.Inventory
         // If length == 0, useable anywhere
         protected List<InteractiveComponent> interactives;
 
-        public Item(Texture2D image, string itemName)
+        public Item(Game game, string imageName, string itemName)
+            : base(game)
         {
-            uiImage = image;
+            this.imageName = imageName;
             name = itemName;
+        }
+
+        protected override void LoadContent()
+        {
+            uiImage = this.Game.Content.Load<Texture2D>(imageName);
+
+            base.LoadContent();
         }
 
         public virtual void Use()

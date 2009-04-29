@@ -1,5 +1,5 @@
 #undef FLOOR_TEST
-#undef DRAW_COLLIDABLES
+#define DRAW_COLLIDABLES
 #undef WIREFRAME
 
 using System;
@@ -80,7 +80,7 @@ namespace Project_Fuzzy
             
             avatar = new Avatar(this, "sphere", testBody);
             avatar.DrawOrder = 1;
-            avatar.Position = new Vector3(-25, 10, 0);
+            avatar.Position = new Vector3(-158, 45, 73);
             Components.Add(avatar);
 
             sphere1 = new InteractiveComponent(this, "sphere", true, @"");
@@ -118,7 +118,7 @@ namespace Project_Fuzzy
             inventory = new GUIInventory(this);
             inventory.Visible = false;
             inventory.Enabled = false;
-            inventory.DrawOrder = 2;
+            inventory.DrawOrder = 5;
             Components.Add(inventory);
 
             base.Initialize();
@@ -242,7 +242,7 @@ namespace Project_Fuzzy
 
                     if (sphere1.inRange(avatar.Position))
                     {
-                        inventory.addItem(sphere1.ModelTextureForInventory, sphere1.ModelName);
+                        inventory.addItem(sphere1.TextureName, sphere1.ModelName);
                         sphere1.Visible = false;
                         Console.WriteLine("ADDED");
                     }
@@ -363,18 +363,19 @@ namespace Project_Fuzzy
 #if DRAW_COLLIDABLES
         private void DrawCollidables()
         {
-            //if (physics.Vertices.Length > 0)
-            //{
-            //    effect.Parameters["BasicTexture"].SetValue(texture);
-            //    effect.Begin();
-            //    foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            //    {
-            //        pass.Begin();
-            //        GraphicsDevice.DrawUserPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, physics.Vertices, 0, physics.Vertices.Length / 3);
-            //        pass.End();
-            //    }
-            //    effect.End();
-            //}
+            foreach (CustomModel model in physics.Collidables)
+            {
+                model.Draw(Matrix.Identity);
+                //effect.Parameters["BasicTexture"].SetValue(texture);
+                //effect.Begin();
+                //foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                //{
+                //    pass.Begin();
+                //    GraphicsDevice.DrawUserPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, physics.Vertices, 0, physics.Vertices.Length / 3);
+                //    pass.End();
+                //}
+                //effect.End();
+            }
         }
 #endif
     }
