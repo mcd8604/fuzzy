@@ -29,7 +29,8 @@ namespace Project_Fuzzy.Inventory
 
         protected override void LoadContent()
         {
-            uiImage = this.Game.Content.Load<Texture2D>(imageName);
+            if(!string.IsNullOrEmpty(imageName))
+                uiImage = this.Game.Content.Load<Texture2D>(imageName);
 
             base.LoadContent();
         }
