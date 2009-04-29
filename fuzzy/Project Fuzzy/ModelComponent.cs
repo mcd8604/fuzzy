@@ -9,6 +9,12 @@ namespace Project_Fuzzy
 {
     public class ModelComponent : DrawableGameComponent
     {
+        private Camera camera;
+        public Camera Camera
+        {
+            get { return camera; }
+            set { camera = value; }
+        }
 
         private string modelName;
         protected CustomModel model;
@@ -17,24 +23,24 @@ namespace Project_Fuzzy
             get { return model; }
         }
 
-        protected Effect effect;
-        public Effect ModelEffect
-        {
-            set
-            {
-                effect = value;
-                if (model != null)
-                {
-                    foreach (ModelPart part in model.ModelParts)
-                        part.Effect = effect;
-                }
-            }
+        //protected Effect effect;
+        //public Effect ModelEffect
+        //{
+        //    set
+        //    {
+        //        effect = value;
+        //        if (model != null)
+        //        {
+        //            foreach (ModelPart part in model.ModelParts)
+        //                part.Effect = effect;
+        //        }
+        //    }
 
-            get
-            {
-                return effect;
-            }
-        }
+        //    get
+        //    {
+        //        return effect;
+        //    }
+        //}
 
         protected Vector4 color = Color.White.ToVector4();
         public Vector4 ModelColor
@@ -84,7 +90,7 @@ namespace Project_Fuzzy
 
         public override void Draw(GameTime gameTime)
         {
-            model.Draw(getTransform());
+            model.Draw(getTransform(), camera.View, camera.Projection);
         }
 
         private Matrix getTransform()

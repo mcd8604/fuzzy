@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Project_Fuzzy
 {
-    class Camera : DrawableGameComponent
+    public class Camera : DrawableGameComponent
     {
 
         protected Vector3 position = Vector3.Zero;
@@ -19,8 +19,8 @@ namespace Project_Fuzzy
                 position = value;
                 viewMatrix = Matrix.CreateLookAt(position, target, Vector3.Up);
 
-                if (effect != null)
-                    effect.Parameters["EyePosition"].SetValue(position);
+                //if (effect != null)
+                //    effect.Parameters["EyePosition"].SetValue(position);
             }
         }
 
@@ -35,14 +35,25 @@ namespace Project_Fuzzy
             }
         }
 
-        protected Effect effect;
-        public Effect Effect
-        {
-            get { return effect; }
-            set { effect = value; }
-        }
+        //protected Effect effect;
+        //public Effect Effect
+        //{
+        //    get { return effect; }
+        //    set { effect = value; }
+        //}
 
         protected Matrix viewMatrix;
+        public Matrix View
+        {
+            get { return viewMatrix; }
+        }
+
+        protected Matrix projection;
+        public Matrix Projection
+        {
+            set { projection = value; }
+            get { return projection; }
+        }
 
         public Camera(Game game)
             : base(game) { }
@@ -54,7 +65,7 @@ namespace Project_Fuzzy
 
         public override void Draw(GameTime gameTime)
         {
-            effect.Parameters["View"].SetValue(viewMatrix);
+            //effect.Parameters["View"].SetValue(viewMatrix);
 
             base.Draw(gameTime);
         }

@@ -110,7 +110,7 @@ namespace Project_Fuzzy
         /// <summary>
         /// Draws the model using the specified camera matrices.
         /// </summary>
-        public void Draw(Matrix world)
+        public void Draw(Matrix world, Matrix view, Matrix projection)
         {
             foreach (ModelPart modelPart in modelParts)
             {
@@ -124,6 +124,8 @@ namespace Project_Fuzzy
                     effect.EnableDefaultLighting();
 
                     effect.World = world;
+                    effect.View = view;
+                    effect.Projection = projection;
 
                     // Set the graphics device to use our vertex declaration,
                     // vertex buffer, and index buffer.

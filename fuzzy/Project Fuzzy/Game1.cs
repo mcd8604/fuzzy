@@ -80,7 +80,7 @@ namespace Project_Fuzzy
             
             avatar = new Avatar(this, "sphere", testBody);
             avatar.DrawOrder = 1;
-            avatar.Position = new Vector3(-158, 45, 73);
+            avatar.Position = new Vector3(-0, 3, 0);
             Components.Add(avatar);
 
             sphere1 = new InteractiveComponent(this, "sphere", true, @"");
@@ -166,15 +166,13 @@ namespace Project_Fuzzy
 
             InitializeEffect();
 
-            camera.Effect = effect;
-            
-            avatar.ModelEffect = effect;
-            sphere1.ModelEffect = effect;
-            sphere2.ModelEffect = effect;
-            sphere3.ModelEffect = effect;
-            sphere4.ModelEffect = effect;
+            avatar.Camera = camera;
+            sphere1.Camera = camera;
+            sphere2.Camera = camera;
+            sphere3.Camera = camera;
+            sphere4.Camera = camera;
 #if !FLOOR_TEST
-            courtyard.ModelEffect = effect;
+            courtyard.Camera = camera;
 #if DRAW_COLLIDABLES
             courtyard.Visible = false;
 #endif
@@ -193,8 +191,10 @@ namespace Project_Fuzzy
                 GraphicsDevice.Viewport.AspectRatio,
                 1.0f, 1000.0f);
 
-            effect.Parameters["Projection"].SetValue(projectionMatrix);
-            effect.Parameters["World"].SetValue(Matrix.Identity);
+            camera.Projection = projectionMatrix;
+
+            //effect.Parameters["Projection"].SetValue(projectionMatrix);
+            //effect.Parameters["World"].SetValue(Matrix.Identity);
         }
 
 		/// <summary>
@@ -205,15 +205,15 @@ namespace Project_Fuzzy
         {
             effect = new BasicEffect(GraphicsDevice, new EffectPool());
 
-            effect.LightingEnabled = true;
-            effect.TextureEnabled = false;
+            //effect.LightingEnabled = true;
+            //effect.TextureEnabled = true;
 
-            effect.AmbientLightColor = new Vector3(.2f, .2f, .2f);
+            //effect.AmbientLightColor = new Vector3(.2f, .2f, .2f);
 
-            effect.DirectionalLight0.Enabled = true;
-            effect.DirectionalLight0.Direction = Vector3.Normalize(Vector3.One * -1);
-            effect.DirectionalLight0.SpecularColor = Vector3.One;
-            effect.DirectionalLight0.DiffuseColor = Vector3.One;
+            //effect.DirectionalLight0.Enabled = true;
+            //effect.DirectionalLight0.Direction = Vector3.Normalize(Vector3.One * -1);
+            //effect.DirectionalLight0.SpecularColor = Vector3.One;
+            //effect.DirectionalLight0.DiffuseColor = Vector3.One;
         }
 
         /// <summary>
@@ -365,7 +365,7 @@ namespace Project_Fuzzy
         {
             foreach (CustomModel model in physics.Collidables)
             {
-                model.Draw(Matrix.Identity);
+                model.Draw(Matrix.Identity, camera.View, projectionMatrix);
                 //effect.Parameters["BasicTexture"].SetValue(texture);
                 //effect.Begin();
                 //foreach (EffectPass pass in effect.CurrentTechnique.Passes)
