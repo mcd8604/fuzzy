@@ -27,7 +27,6 @@ namespace Project_Fuzzy
         SpriteBatch spriteBatch;
 
         GUIInventory inventory;
-
         KeyboardState lastState;
 
         Matrix projectionMatrix;
@@ -55,6 +54,8 @@ namespace Project_Fuzzy
 
         PhysicsBody testBody;
 
+        MouseCursor mouse;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -77,13 +78,17 @@ namespace Project_Fuzzy
             testBody = new PhysicsBody();
 
             physics.AddBody(testBody);
-            
+
+            mouse = new MouseCursor(this, "cursor");
+            mouse.DrawOrder = 99999;
+            Components.Add(mouse);
+
             avatar = new Avatar(this, "sphere", testBody);
             avatar.DrawOrder = 1;
             avatar.Position = new Vector3(-0, 3, 0);
             Components.Add(avatar);
 
-            sphere1 = new InteractiveComponent(this, "sphere", true, @"");
+            sphere1 = new InteractiveComponent(this, "sphere", true, @"ball");
             sphere1.DrawOrder = 1;
             sphere1.Position = new Vector3(10, 2, 10);
             Components.Add(sphere1);

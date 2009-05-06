@@ -55,7 +55,8 @@ namespace Project_Fuzzy.Inventory
 
             foreach (Item image in itemList)
             {
-                spriteBatch.Draw(image.UIImage, new Vector2(500, 300), Color.White);
+                if(image.UIImage != null)
+                    spriteBatch.Draw(image.UIImage, new Vector2(500, 300), Color.White);
             }
             spriteBatch.End();
             base.Draw(gameTime);

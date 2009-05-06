@@ -88,6 +88,7 @@
     <Compile Include="Inventory\GUIInventory.cs" />
     <Compile Include="Inventory\Item.cs" />
     <Compile Include="ModelComponent.cs" />
+    <Compile Include="MouseCursor.cs" />
     <Compile Include="Physics.cs" />
     <Compile Include="PhysicsBody.cs" />
     <Compile Include="Season\ISeasonable.cs" />
