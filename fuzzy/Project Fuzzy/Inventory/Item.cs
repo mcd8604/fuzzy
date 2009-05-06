@@ -27,6 +27,15 @@ namespace Project_Fuzzy.Inventory
             name = itemName;
         }
 
+
+        public Item(Game game, string imageName, string itemName, Vector2 inPosition)
+            : base(game)
+        {
+            this.imageName = imageName;
+            name = itemName;
+            position = inPosition;
+        }
+
         protected override void LoadContent()
         {
             if(!string.IsNullOrEmpty(imageName))

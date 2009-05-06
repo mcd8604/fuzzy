@@ -36,8 +36,9 @@ namespace Project_Fuzzy.Inventory
         {
             // TODO: Add your initialization code here
             itemList = new List<Item>();
-                
-            addItem(@"inventory", "inventory");
+
+           addItem(@"inventory", "inventory", new Vector2(500, 300));
+            
 
             base.Initialize();
         }
@@ -56,7 +57,7 @@ namespace Project_Fuzzy.Inventory
             foreach (Item image in itemList)
             {
                 if(image.UIImage != null)
-                    spriteBatch.Draw(image.UIImage, new Vector2(500, 300), Color.White);
+                    spriteBatch.Draw(image.UIImage, image.Position, Color.White);
             }
             spriteBatch.End();
             base.Draw(gameTime);
@@ -82,10 +83,26 @@ namespace Project_Fuzzy.Inventory
         {
             Item item = new Item(this.Game, name2D, name);
 
-            int yOffset = itemList.Count / 4;
-            int xOffset = itemList.Count % 4;
+            int yOffset = ((itemList.Count-1) / 4);
+            int xOffset = ((itemList.Count-1) % 4);
 
-            item.Position = new Vector2((xOffset * 60), yOffset * 60);
+            item.Position = new Vector2((xOffset * 60) + getItemByName("inventory").Position.X, (yOffset * 60) + getItemByName("inventory").Position.Y);
+            item.DrawOrder = this.DrawOrder + itemList.Count;
+
+            itemList.Add(item);
+            this.Game.Components.Add(item);
+
+        }
+
+        /// <summary>
+        /// Adds the item to the inventory list
+        /// </summary>
+        /// <param name="name2D"></param>
+        /// <param name="name"></param>
+        public void addItem(string name2D, string name, Vector2 pos)
+        {
+            Item item = new Item(this.Game, name2D, name, pos);
+
             item.DrawOrder = this.DrawOrder + itemList.Count;
 
             itemList.Add(item);
@@ -112,5 +129,38 @@ namespace Project_Fuzzy.Inventory
             }
 
         }
+
+        public bool checkIfItemClicked(int xVal, int yVal)
+        {
+            bool retVal = false;
+
+            Item tempInventory = getItemByName("inventory");
+
+            if (xVal - tempInventory.Position.X >= 0 && yVal - tempInventory.Position.Y >= 0)
+            {
+                Console.WriteLine(xVal + "::" + yVal);
+                Console.WriteLine("Clicked in Inventory at X: " + (xVal - tempInventory.Position.X) + " Y: " + (yVal - tempInventory.Position.Y));
+            }
+            
+
+            return retVal;
+        }
+
+        public Item getItemByName(string name)
+        {
+            Item retVal = null;
+            foreach (Item image in itemList)
+            {
+                if (image.Name == name)
+                {
+                    retVal = image;
+                    break;
+                }
+            }
+
+            return retVal;
+
+        }
+
     }
 }

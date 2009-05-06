@@ -28,6 +28,7 @@ namespace Project_Fuzzy
 
         GUIInventory inventory;
         KeyboardState lastState;
+        MouseState lastMouseState;
 
         Matrix projectionMatrix;
 
@@ -60,6 +61,8 @@ namespace Project_Fuzzy
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            lastMouseState = Mouse.GetState();
+            lastState = Keyboard.GetState();
         }
 
         /// <summary>
@@ -238,11 +241,23 @@ namespace Project_Fuzzy
         protected override void Update(GameTime gameTime)
         {
             KeyboardState currentState = Keyboard.GetState();
+            MouseState currentMouseState = Mouse.GetState();
 
+            if (currentMouseState.LeftButton == ButtonState.Pressed)
+            {
+                if (lastMouseState.LeftButton == ButtonState.Released)
+                {
+                    if (inventory.Enabled)
+                    {
+                        //Console.WriteLine(currentMouseState.X + ":" + currentMouseState.Y);
+                        inventory.checkIfItemClicked(currentMouseState.X, currentMouseState.Y);
+                    }
+                }
+            }
 
             if (currentState.IsKeyDown(Keys.Enter))
             {
-                if (lastState != null && lastState != currentState)
+                if (lastState != currentState)
                 {
 
                     if (sphere1.inRange(avatar.Position))
@@ -306,7 +321,7 @@ namespace Project_Fuzzy
 
             if (currentState.IsKeyDown(Keys.I))
             {
-                if (lastState != null && lastState != currentState)
+                if (lastState != currentState)
                 {
                     if (!inventory.Enabled)
                     {
@@ -325,6 +340,7 @@ namespace Project_Fuzzy
             camera.Position = avatar.Position + Vector3.Transform(cameraOffset, avatar.Rotation);
 
             lastState = currentState;
+            lastMouseState = currentMouseState;
 
             base.Update(gameTime);
         }
@@ -336,7 +352,8 @@ namespace Project_Fuzzy
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            //Object temp = GraphicsDevice.PresentationParameters;
+            GraphicsDevice.Reset();
             // TODO: Add your drawing code here      
             
 
