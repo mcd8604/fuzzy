@@ -41,7 +41,6 @@ namespace Project_Fuzzy
         public override void Initialize()
         {
             // TODO: Add your initialization code here
-            spriteBatch = new SpriteBatch(this.Game.GraphicsDevice);
 
             base.Initialize();
         }
@@ -49,6 +48,7 @@ namespace Project_Fuzzy
         protected override void LoadContent()
         {
             mouseCursor = this.Game.Content.Load<Texture2D>(textureName);
+            spriteBatch = new SpriteBatch(this.Game.GraphicsDevice);
 
             base.LoadContent();
         }
