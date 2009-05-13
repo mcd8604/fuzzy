@@ -30,6 +30,8 @@ namespace Project_Fuzzy
         KeyboardState lastState;
         MouseState lastMouseState;
 
+        List<InteractiveComponent> interactiveModelList;
+
         Matrix projectionMatrix;
 
         Camera camera;
@@ -42,6 +44,9 @@ namespace Project_Fuzzy
         ModelComponent sphere3;
         ModelComponent sphere4;        
         Texture2D texture;
+
+        InteractiveModelLoader modelLoader;
+
 
 #if FLOOR_TEST
         VertexPositionNormalTexture[] floorVertices;
@@ -63,6 +68,7 @@ namespace Project_Fuzzy
             Content.RootDirectory = "Content";
             lastMouseState = Mouse.GetState();
             lastState = Keyboard.GetState();
+            
         }
 
         /// <summary>
@@ -73,6 +79,8 @@ namespace Project_Fuzzy
         /// </summary>
         protected override void Initialize()
         {
+
+           
 
             // TODO: Add your initialization logic here
             physics = new Physics(this);
@@ -90,7 +98,7 @@ namespace Project_Fuzzy
             avatar.DrawOrder = 1;
             avatar.Position = new Vector3(-0, 3, 0);
             Components.Add(avatar);
-
+            /*
             sphere1 = new InteractiveComponent(this, "sphere", true, @"ball");
             sphere1.DrawOrder = 1;
             sphere1.Position = new Vector3(10, 2, 10);
@@ -109,7 +117,7 @@ namespace Project_Fuzzy
             sphere4 = new ModelComponent(this, "sphere");
             sphere4.DrawOrder = 1;
             sphere4.Position = new Vector3(-10, 5, -10);
-            Components.Add(sphere4);
+            Components.Add(sphere4);*/
 #if !FLOOR_TEST
             courtyard = new ModelComponent(this, "courtyard");
             courtyard.DrawOrder = 1;
@@ -119,6 +127,10 @@ namespace Project_Fuzzy
             camera.Position = cameraOffset;
             camera.DrawOrder = 0;
             Components.Add(camera);
+
+            modelLoader = new InteractiveModelLoader(this, camera, "Content/interactiveComponents.txt");
+            interactiveModelList = modelLoader.readFile();
+
 #if FLOOR_TEST
             InitializeFloor();
 #endif
@@ -173,10 +185,10 @@ namespace Project_Fuzzy
             InitializeEffect();
 
             avatar.Camera = camera;
-            sphere1.Camera = camera;
-            sphere2.Camera = camera;
-            sphere3.Camera = camera;
-            sphere4.Camera = camera;
+           // sphere1.Camera = camera;
+            //sphere2.Camera = camera;
+            //sphere3.Camera = camera;
+           // sphere4.Camera = camera;
 #if !FLOOR_TEST
             courtyard.Camera = camera;
 #if DRAW_COLLIDABLES
@@ -257,13 +269,13 @@ namespace Project_Fuzzy
             {
                 if (lastState != currentState)
                 {
-
-                    if (sphere1.inRange(avatar.Position))
-                    {
-                        inventory.addItem(sphere1.TextureName, sphere1.ModelName);
-                        sphere1.Visible = false;
-                        Console.WriteLine("ADDED");
-                    }
+                   // foreach(InteractiveComponent model in 
+                   // if (sphere1.inRange(avatar.Position))
+                   // {
+                    //    inventory.addItem(sphere1.TextureName, sphere1.ModelName);
+                   //     sphere1.Visible = false;
+                    //    Console.WriteLine("ADDED");
+                   // }
                 }
             }
 

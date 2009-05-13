@@ -81,7 +81,7 @@ namespace Project_Fuzzy
         private void GenerateBoundingSphere()
         {
             bounds = new BoundingSphere();
-
+      
             foreach (ModelPart part in model.ModelParts)
             {
                 bounds = BoundingSphere.CreateMerged(bounds, part.BoundingSphere);

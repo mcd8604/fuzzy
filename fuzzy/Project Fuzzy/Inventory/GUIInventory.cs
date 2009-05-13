@@ -83,14 +83,33 @@ namespace Project_Fuzzy.Inventory
         {
             Item item = new Item(this.Game, name2D, name);
 
-            int yOffset = ((itemList.Count-1) / 4);
-            int xOffset = ((itemList.Count-1) % 4);
+            int yOffset = ((itemList.Count-1) / 5);
+            int xOffset = ((itemList.Count-1) % 5);
 
-            item.Position = new Vector2((xOffset * 60) + getItemByName("inventory").Position.X, (yOffset * 60) + getItemByName("inventory").Position.Y);
+            item.Position = new Vector2((xOffset * 50) + getItemByName("inventory").Position.X, (yOffset * 50) + getItemByName("inventory").Position.Y);
             item.DrawOrder = this.DrawOrder + itemList.Count;
 
             itemList.Add(item);
             this.Game.Components.Add(item);
+
+        }
+
+        public void rePositionItems()
+        {
+            int yOffset = 0;
+            int xOffset = 0;
+            int count = 0;
+            foreach (Item item in itemList)
+            {
+                if(count > 0){ //Skips the inventory item
+                    item.Position = new Vector2((xOffset * 50) + getItemByName("inventory").Position.X, (yOffset * 50) + getItemByName("inventory").Position.Y);
+                    item.DrawOrder = this.DrawOrder + itemList.Count;
+
+                    yOffset = ((count) / 5);
+                    xOffset = ((count) % 5);
+                }
+                count++;
+            }
 
         }
 
@@ -114,19 +133,15 @@ namespace Project_Fuzzy.Inventory
         /// Removes the item from the array with a certain name
         /// </summary>
         /// <param name="name"></param>
-        public void removeItem(string name)
+        public bool removeItem(int index)
         {
-            int index = 0;
-
-            foreach(Item image in itemList)
+            if (itemList.Count > (index + 1))
             {
-                if (image.Name == name)
-                {
-                    itemList.RemoveAt(index);
-                    break;
-                }
-                
+                this.Game.Components.Remove(itemList[index+1]);
+                itemList.RemoveAt(index+1);
+                return true;
             }
+            return false;
 
         }
 
@@ -136,10 +151,17 @@ namespace Project_Fuzzy.Inventory
 
             Item tempInventory = getItemByName("inventory");
 
+            float curXVal = xVal - tempInventory.Position.X;
+            float curYVal = yVal - tempInventory.Position.Y;
+
             if (xVal - tempInventory.Position.X >= 0 && yVal - tempInventory.Position.Y >= 0)
             {
                 Console.WriteLine(xVal + "::" + yVal);
                 Console.WriteLine("Clicked in Inventory at X: " + (xVal - tempInventory.Position.X) + " Y: " + (yVal - tempInventory.Position.Y));
+                Console.WriteLine("Inventory Item clicked : " + (((int)curXVal) / 50 + (((int)curYVal) / 50) * 4));
+                removeItem(((int)curXVal) / 50 + (((int)curYVal) / 50) * 4);
+                rePositionItems();
+
             }
             
 
