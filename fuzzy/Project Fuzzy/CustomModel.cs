@@ -167,9 +167,6 @@ namespace Project_Fuzzy
                 VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[part.VertexBuffer.SizeInBytes / part.VertexStride];
                 part.VertexBuffer.GetData<VertexPositionNormalTexture>(vertices);
 
-                if (modelName == "courtyard")
-                { }
-
                 if (part.IndexBuffer.IndexElementSize == IndexElementSize.SixteenBits)
                 {
                     Int16[] indices = new Int16[part.IndexBuffer.SizeInBytes >> 1];
