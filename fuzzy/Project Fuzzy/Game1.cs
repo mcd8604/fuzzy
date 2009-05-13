@@ -159,8 +159,6 @@ namespace Project_Fuzzy
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-           
-
             // TODO: use this.Content to load your game content here
 
 #if WIREFRAME      
@@ -168,7 +166,7 @@ namespace Project_Fuzzy
 #endif
 
             vpntDeclaration = new VertexDeclaration(GraphicsDevice, VertexPositionNormalTexture.VertexElements);
-            GraphicsDevice.VertexDeclaration = vpntDeclaration;
+            //GraphicsDevice.VertexDeclaration = vpntDeclaration;
 
             texture = Content.Load<Texture2D>("Checker");
 
@@ -352,8 +350,9 @@ namespace Project_Fuzzy
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.RenderState.DepthBufferEnable = true;
             //Object temp = GraphicsDevice.PresentationParameters;
-            GraphicsDevice.Reset();
+            //GraphicsDevice.Reset();
             // TODO: Add your drawing code here      
             
 
