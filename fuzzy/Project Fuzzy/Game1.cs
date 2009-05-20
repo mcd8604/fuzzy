@@ -269,15 +269,24 @@ namespace Project_Fuzzy
             {
                 if (lastState != currentState)
                 {
+                    List<InteractiveComponent> itemsToRemove = new List<InteractiveComponent>();
                     foreach (InteractiveComponent model in interactiveModelList)
                     {
                         if (model.inRange(avatar.Position))
                         {
                             inventory.addItem(model.TextureName, model.ModelName);
                             model.Visible = false;
-                            Console.WriteLine("ADDED");
-
+                            //Console.WriteLine("ADDED");
+                            itemsToRemove.Add(model);
+                            
                         }
+                    }
+
+                    while(itemsToRemove.Count != 0)
+                    {
+                        this.Components.Remove(itemsToRemove[0]);
+                        interactiveModelList.Remove(itemsToRemove[0]);
+                        itemsToRemove.Remove(itemsToRemove[0]);
                     }
 
                    // if (sphere1.inRange(avatar.Position))
