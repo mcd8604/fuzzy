@@ -269,7 +269,17 @@ namespace Project_Fuzzy
             {
                 if (lastState != currentState)
                 {
-                   // foreach(InteractiveComponent model in 
+                    foreach (InteractiveComponent model in interactiveModelList)
+                    {
+                        if (model.inRange(avatar.Position))
+                        {
+                            inventory.addItem(model.TextureName, model.ModelName);
+                            model.Visible = false;
+                            Console.WriteLine("ADDED");
+
+                        }
+                    }
+
                    // if (sphere1.inRange(avatar.Position))
                    // {
                     //    inventory.addItem(sphere1.TextureName, sphere1.ModelName);
