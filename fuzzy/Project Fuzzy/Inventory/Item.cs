@@ -13,6 +13,8 @@ namespace Project_Fuzzy.Inventory
         protected string imageName;
         protected Texture2D uiImage;
 
+        protected bool isRemoveable;
+
         protected string name;
 
         protected Vector2 position;
@@ -21,11 +23,13 @@ namespace Project_Fuzzy.Inventory
         protected List<InteractiveComponent> interactives;
 
 
-        public Item(Game game, string imageName, string itemName)
+        public Item(Game game, string imageName, string itemName, bool inRemoveable)
             : base(game)
         {
             this.imageName = imageName;
+            isRemoveable = inRemoveable;
             name = itemName;
+            interactives = new List<InteractiveComponent>();
         }
 
 
@@ -45,9 +49,17 @@ namespace Project_Fuzzy.Inventory
             base.LoadContent();
         }
 
-        public virtual void Use()
+        public void addLinkedItem(InteractiveComponent linkedItem)
+        {
+            interactives.Add(linkedItem);
+
+        }
+
+
+        public virtual bool Use()
         {
             // Do Stuff
+            return true;
         }
 
         public Texture2D UIImage
@@ -68,6 +80,13 @@ namespace Project_Fuzzy.Inventory
         {
             get { return position; }
             set { position = value; }
+
+        }
+
+        public bool Removeable
+        {
+            get { return isRemoveable; }
+            set { isRemoveable = value; }
 
         }
     }

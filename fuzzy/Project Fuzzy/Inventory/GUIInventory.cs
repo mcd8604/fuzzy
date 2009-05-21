@@ -82,19 +82,10 @@ namespace Project_Fuzzy.Inventory
         /// </summary>
         /// <param name="name2D"></param>
         /// <param name="name"></param>
-        public void addItem(string name2D, string name)
+        public void addItem(Item inItem)
         {
-            Item item;
-            switch (name)
-            {
-                case "sphere": item = new Sphere(this.Game, name2D, name);
-                    break;
-                case "key": item = new Key(this.Game, name2D, name);
-                    break;
-                default: item = new Item(this.Game, name2D, name);
-                    break;
-            }
-            
+
+            Item item = inItem;
 
             int yOffset = ((itemList.Count-1) / 5);
             int xOffset = ((itemList.Count-1) % 5);
@@ -167,13 +158,33 @@ namespace Project_Fuzzy.Inventory
             float curXVal = xVal - tempInventory.Position.X;
             float curYVal = yVal - tempInventory.Position.Y;
 
+            int index;
+
+            bool canUse = false ;
+
             if (xVal - tempInventory.Position.X >= 0 && yVal - tempInventory.Position.Y >= 0)
             {
                 Console.WriteLine(xVal + "::" + yVal);
                 Console.WriteLine("Clicked in Inventory at X: " + (xVal - tempInventory.Position.X) + " Y: " + (yVal - tempInventory.Position.Y));
                 Console.WriteLine("Inventory Item clicked : " + (((int)curXVal) / 50 + (((int)curYVal) / 50) * 4));
-                removeItem(((int)curXVal) / 50 + (((int)curYVal) / 50) * 4);
-                rePositionItems();
+
+                index = (((int)curXVal) / 50 + (((int)curYVal) / 50) * 4);
+
+
+
+                if (itemList.Count > (index + 1))
+                {
+                    canUse = itemList[index + 1].Use();
+                }
+
+                if (canUse && itemList.Count > (index + 1) && itemList[index+1].Removeable)
+                {
+                    removeItem(index);
+                    rePositionItems();
+                }
+
+             
+
 
             }
             

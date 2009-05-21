@@ -1,3 +1,3 @@
-sphere;true;ball;15;2;15
-sphere;true;ball;10;5;10
-key;true;keyIn;-128;51;140
+1;sphere;true;ball;true;15;2;15
+2;sphere;true;ball;true;10;5;10
+3;key;true;keyIn;false;-128;51;140;

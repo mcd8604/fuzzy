@@ -35,8 +35,8 @@ namespace Project_Fuzzy
             {
                 lineContext = line.Split(';');
 
-                tempModel = new InteractiveComponent(myGame, lineContext[0], Boolean.Parse(lineContext[1]), @lineContext[2]);
-                tempModel.Position = new Vector3(float.Parse(lineContext[3]), float.Parse(lineContext[4]), float.Parse(lineContext[5]));
+                tempModel = new InteractiveComponent(myGame, Int32.Parse(lineContext[0]) ,lineContext[1], Boolean.Parse(lineContext[2]), @lineContext[3], Boolean.Parse(lineContext[4]));
+                tempModel.Position = new Vector3(float.Parse(lineContext[5]), float.Parse(lineContext[6]), float.Parse(lineContext[7]));
                 tempModel.Camera = myCamera;
                 interactiveModelList.Add(tempModel);
                 myGame.Components.Add(tempModel);
@@ -44,8 +44,46 @@ namespace Project_Fuzzy
                 line = reader.ReadLine();
             }
 
+            
+
+
             return interactiveModelList;
 
         }
+
+        public void linkItems(List<InteractiveComponent> items)
+        {
+            StreamReader linkageReader = new StreamReader("Content/ItemLinkage.txt");
+            string lineLinkage = linkageReader.ReadLine();
+            string[] lineLinkageContext;
+
+            while (lineLinkage != null)
+            {
+                lineLinkageContext = lineLinkage.Split(';');
+
+                items[findIndexFromID(Int32.Parse(lineLinkageContext[0]), items)].ModelItem.addLinkedItem(items[findIndexFromID(Int32.Parse(lineLinkageContext[1]), items)]);
+
+
+                lineLinkage = linkageReader.ReadLine();
+            }
+        }
+
+        public int findIndexFromID(int id, List<InteractiveComponent> items )
+        {
+            int count = 0;
+
+            foreach (InteractiveComponent model in items)
+            {
+                if (model.ModelID == id)
+                {
+                    return count;
+                }
+
+                count++;
+            }
+
+            return count;
+        }
+
     }
 }

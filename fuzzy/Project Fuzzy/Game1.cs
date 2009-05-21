@@ -38,11 +38,7 @@ namespace Project_Fuzzy
         Vector3 cameraOffset = new Vector3(0, 1, 10);
 
         BasicEffect effect;
-        Avatar avatar;
-        InteractiveComponent sphere1;
-        ModelComponent sphere2;
-        ModelComponent sphere3;
-        ModelComponent sphere4;        
+        Avatar avatar;    
         Texture2D texture;
 
         InteractiveModelLoader modelLoader;
@@ -130,6 +126,7 @@ namespace Project_Fuzzy
 
             modelLoader = new InteractiveModelLoader(this, camera, "Content/interactiveComponents.txt");
             interactiveModelList = modelLoader.readFile();
+            modelLoader.linkItems(interactiveModelList);
 
 #if FLOOR_TEST
             InitializeFloor();
@@ -274,7 +271,8 @@ namespace Project_Fuzzy
                     {
                         if (model.inRange(avatar.Position))
                         {
-                            inventory.addItem(model.TextureName, model.ModelName);
+                            inventory.addItem(model.ModelItem);
+
                             model.Visible = false;
                             //Console.WriteLine("ADDED");
                             itemsToRemove.Add(model);

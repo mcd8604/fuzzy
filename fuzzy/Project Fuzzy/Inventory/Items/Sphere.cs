@@ -9,17 +9,19 @@ namespace Project_Fuzzy.Items
 {
     public class Sphere : Inventory.Item
     {
-        public Sphere(Game game, string imageName, string itemName)
-            :base(game, imageName, itemName)
+        public Sphere(Game game, string imageName, string itemName, bool inRemoveable)
+            : base(game, imageName, itemName, inRemoveable)
         {
 
         }
 
-        public override void Use()
+        public override bool Use()
         {
-            
+            Console.WriteLine("SPEHERE USE");
 
             base.Use();
+
+            return true;
         }
 
     }
