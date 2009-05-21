@@ -1,5 +1,5 @@
 #undef FLOOR_TEST
-#define DRAW_COLLIDABLES
+#undef DRAW_COLLIDABLES
 #undef WIREFRAME
 
 using System;
