@@ -11,6 +11,9 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using Project_Fuzzy.Items;
+using Project_Fuzzy.Inventory.Items;
+
 
 namespace Project_Fuzzy.Inventory
 {
@@ -81,7 +84,17 @@ namespace Project_Fuzzy.Inventory
         /// <param name="name"></param>
         public void addItem(string name2D, string name)
         {
-            Item item = new Item(this.Game, name2D, name);
+            Item item;
+            switch (name)
+            {
+                case "sphere": item = new Sphere(this.Game, name2D, name);
+                    break;
+                case "key": item = new Key(this.Game, name2D, name);
+                    break;
+                default: item = new Item(this.Game, name2D, name);
+                    break;
+            }
+            
 
             int yOffset = ((itemList.Count-1) / 5);
             int xOffset = ((itemList.Count-1) % 5);

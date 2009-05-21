@@ -96,7 +96,7 @@ namespace Project_Fuzzy
 
             avatar = new Avatar(this, "sphere", testBody);
             avatar.DrawOrder = 1;
-            avatar.Position = new Vector3(-0, 3, 0);
+            avatar.Position = new Vector3(-158, 42, 73);
             Components.Add(avatar);
             /*
             sphere1 = new InteractiveComponent(this, "sphere", true, @"ball");

@@ -1,2 +1,3 @@
 sphere;true;ball;15;2;15
 sphere;true;ball;10;5;10
+key;true;keyIn;-128;51;140

@@ -20,6 +20,7 @@ namespace Project_Fuzzy.Inventory
         // If length == 0, useable anywhere
         protected List<InteractiveComponent> interactives;
 
+
         public Item(Game game, string imageName, string itemName)
             : base(game)
         {

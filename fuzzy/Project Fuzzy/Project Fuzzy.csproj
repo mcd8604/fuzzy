@@ -88,6 +88,8 @@
     <Compile Include="InteractiveModelLoader.cs" />
     <Compile Include="Inventory\GUIInventory.cs" />
     <Compile Include="Inventory\Item.cs" />
+    <Compile Include="Inventory\Items\Key.cs" />
+    <Compile Include="Inventory\Items\Sphere.cs" />
     <Compile Include="ModelComponent.cs" />
     <Compile Include="MouseCursor.cs" />
     <Compile Include="Physics.cs" />
