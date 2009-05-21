@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace Project_Fuzzy
 {
-    class PhysicsBody
+    public class PhysicsBody
     {
         protected float maxSpeedSq = 25f;
 

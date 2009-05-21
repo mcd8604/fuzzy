@@ -15,11 +15,11 @@ namespace Project_Fuzzy.Items
 
         }
 
-        public override bool Use()
+        public override bool Use(Avatar player)
         {
             Console.WriteLine("SPEHERE USE");
 
-            base.Use();
+            base.Use(player);
 
             return true;
         }

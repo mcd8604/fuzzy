@@ -56,7 +56,7 @@ namespace Project_Fuzzy.Inventory
         }
 
 
-        public virtual bool Use()
+        public virtual bool Use(Avatar player)
         {
             // Do Stuff
             return true;

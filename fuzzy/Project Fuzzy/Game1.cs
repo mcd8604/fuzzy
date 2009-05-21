@@ -30,7 +30,7 @@ namespace Project_Fuzzy
         KeyboardState lastState;
         MouseState lastMouseState;
 
-        List<InteractiveComponent> interactiveModelList;
+        public static List<InteractiveComponent> interactiveModelList;
 
         Matrix projectionMatrix;
 
@@ -57,6 +57,7 @@ namespace Project_Fuzzy
         PhysicsBody testBody;
 
         MouseCursor mouse;
+
 
         public Game1()
         {
@@ -194,6 +195,13 @@ namespace Project_Fuzzy
             physics.AddModel(courtyard.Model);
 #endif
             InitializeTransform();
+
+            foreach (InteractiveComponent ic in interactiveModelList)
+            {
+                physics.AddModel(ic.Model);
+            }
+
+            base.LoadContent();
         }
 
         /// <summary>
@@ -257,7 +265,7 @@ namespace Project_Fuzzy
                     if (inventory.Enabled)
                     {
                         //Console.WriteLine(currentMouseState.X + ":" + currentMouseState.Y);
-                        inventory.checkIfItemClicked(currentMouseState.X, currentMouseState.Y);
+                        inventory.checkIfItemClicked(currentMouseState.X, currentMouseState.Y, avatar);
                     }
                 }
             }
@@ -269,11 +277,12 @@ namespace Project_Fuzzy
                     List<InteractiveComponent> itemsToRemove = new List<InteractiveComponent>();
                     foreach (InteractiveComponent model in interactiveModelList)
                     {
-                        if (model.inRange(avatar.Position))
+                        if (model.Obtainable && model.inRange(avatar.Position))
                         {
                             inventory.addItem(model.ModelItem);
 
                             model.Visible = false;
+                            model.Model.SetCollidable(false);
                             //Console.WriteLine("ADDED");
                             itemsToRemove.Add(model);
                             

@@ -1,3 +1,4 @@
 1;sphere;true;ball;true;15;2;15
 2;sphere;true;ball;true;10;5;10
-3;key;true;keyIn;false;-128;51;140;
+3;key;true;keyIn;false;-128;51;140
+4;gate;false; ;true;-69.8;41.5;139.5

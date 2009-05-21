@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Project_Fuzzy
 {
-    class Avatar : ModelComponent
+    public class Avatar : ModelComponent
     {
         protected Vector3 facing = -Vector3.UnitZ;
         protected Quaternion rotation = Quaternion.Identity;

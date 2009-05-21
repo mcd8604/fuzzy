@@ -34,14 +34,17 @@ namespace Project_Fuzzy
 
             id = inID;
 
-            switch (name)
+            if (isObtainable)
             {
-                case "sphere": modelItem = new Sphere(this.Game, textureName, name, inRemoveable);
-                    break;
-                case "key": modelItem = new Key(this.Game, textureName, name, inRemoveable);
-                    break;
-                default: modelItem = new Item(this.Game, textureName, name, inRemoveable);
-                    break;
+                switch (name)
+                {
+                    case "sphere": modelItem = new Sphere(this.Game, textureName, name, inRemoveable);
+                        break;
+                    case "key": modelItem = new Key(this.Game, textureName, name, inRemoveable);
+                        break;
+                    default: modelItem = new Item(this.Game, textureName, name, inRemoveable);
+                        break;
+                }
             }
         }
 

@@ -145,6 +145,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="gate.fbx">
+      <Name>gate</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>CustomModelProcessor</Processor>
+    </Compile>
     <None Include="ItemLinkage.txt">
       <Name>ItemLinkage</Name>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -149,7 +149,7 @@ namespace Project_Fuzzy.Inventory
 
         }
 
-        public bool checkIfItemClicked(int xVal, int yVal)
+        public bool checkIfItemClicked(int xVal, int yVal, Avatar player)
         {
             bool retVal = false;
 
@@ -174,7 +174,7 @@ namespace Project_Fuzzy.Inventory
 
                 if (itemList.Count > (index + 1))
                 {
-                    canUse = itemList[index + 1].Use();
+                    canUse = itemList[index + 1].Use(player);
                 }
 
                 if (canUse && itemList.Count > (index + 1) && itemList[index+1].Removeable)

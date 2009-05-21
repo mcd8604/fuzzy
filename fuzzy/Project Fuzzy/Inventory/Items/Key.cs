@@ -16,19 +16,32 @@ namespace Project_Fuzzy.Inventory.Items
 
         }
 
-        public override bool Use()
+        public override bool Use(Avatar player)
         {
             Console.WriteLine("KEY USE");
+            bool retVal = false;
+            List<InteractiveComponent> itemsToRemove = new List<InteractiveComponent>();
 
             foreach (InteractiveComponent model in interactives)
             {
-                Console.WriteLine(model.ModelName);
+                if (model.inRange(player.Position))
+                {
+                    model.Model.SetCollidable(false);
+                    itemsToRemove.Add(model);
+                    retVal = true;
+                }
             }
-        
 
-            base.Use();
+            while (itemsToRemove.Count != 0)
+            {
+                Game.Components.Remove(itemsToRemove[0]);
+                Game1.interactiveModelList.Remove(itemsToRemove[0]);
+                itemsToRemove.Remove(itemsToRemove[0]);
+            }
 
-            return true;
+            base.Use(player);
+
+            return retVal;
         }
 
     }

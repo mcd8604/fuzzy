@@ -158,7 +158,7 @@ namespace Project_Fuzzy
             }
         }
 
-        internal void GenerateCollisionTriangles()
+        internal void GenerateCollisionTriangles(Vector3 rootPosition)
         {
             foreach (ModelPart part in modelParts)
             {
@@ -179,7 +179,12 @@ namespace Project_Fuzzy
                             vertices[indices[i + 1]].Position != vertices[indices[i + 2]].Position &&
                             vertices[indices[i + 2]].Position != vertices[indices[i]].Position)
                         {
-                            part.CollisionTriangles.Add(new Triangle(vertices[indices[i]].Position, vertices[indices[i + 1]].Position, vertices[indices[i + 2]].Position));
+                            part.CollisionTriangles.Add(
+                                new Triangle(
+                                    vertices[indices[i]].Position + rootPosition,
+                                    vertices[indices[i + 1]].Position + rootPosition,
+                                    vertices[indices[i + 2]].Position + rootPosition)
+                                    );
                         }
                         else
                         {
@@ -199,9 +204,22 @@ namespace Project_Fuzzy
 
                     for (int i = 0; i < indices.Length; i += 3)
                     {
-                        part.CollisionTriangles.Add(new Triangle(vertices[indices[i]].Position, vertices[indices[i + 1]].Position, vertices[indices[i + 2]].Position));
+                        part.CollisionTriangles.Add(
+                            new Triangle(
+                                vertices[indices[i]].Position + rootPosition,
+                                vertices[indices[i + 1]].Position + rootPosition,
+                                vertices[indices[i + 2]].Position + rootPosition)
+                                );
                     }
                 }
+            }
+        }
+
+        internal void SetCollidable(bool p)
+        {
+            foreach(ModelPart part in modelParts) 
+            {
+                part.Collidable = p;
             }
         }
     }

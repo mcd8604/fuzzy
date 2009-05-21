@@ -71,7 +71,7 @@ namespace Project_Fuzzy
         protected override void LoadContent()
         {
             model = Game.Content.Load<CustomModel>(modelName);
-            model.GenerateCollisionTriangles();
+            model.GenerateCollisionTriangles(position);
             
             GenerateBoundingSphere();
             
